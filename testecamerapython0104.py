@@ -6,7 +6,7 @@ class Image_Stitching():
     def __init__(self) :
         self.ratio=0.85
         self.min_match=10
-        self.sift=cv2.SIFT.create()
+        self.sift=cv2.ORB.create()
         self.smoothing_window_size=800
 
     def registration(self,img1,img2):
@@ -22,6 +22,9 @@ class Image_Stitching():
                 good_matches.append([m1])
         img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, good_matches, None, flags=2)
         cv2.imwrite('matching.jpg', img3)
+        cv2.imshow("Matching", img3)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         if len(good_points) > self.min_match:
             image1_kp = np.float32(
                 [kp1[i].pt for (_, i) in good_points])
@@ -59,9 +62,24 @@ class Image_Stitching():
         mask1 = self.create_mask(img1,img2,version='left_image')
         panorama1[0:img1.shape[0], 0:img1.shape[1], :] = img1
         panorama1 *= mask1
+        cv2.imwrite('panorama1.jpg', panorama1)
         mask2 = self.create_mask(img1,img2,version='right_image')
         panorama2 = cv2.warpPerspective(img2, H, (width_panorama, height_panorama))*mask2
-        result=panorama1+panorama2
+        cv2.imwrite('panorama2.jpg', panorama2)
+        #result=panorama1+panorama2
+        
+        # Blend images
+        overlap_width = 100  # Adjust the width of the blending region
+        blend_width = np.linspace(1, 0, overlap_width)
+        for i in range(overlap_width):
+            panorama1[:, width_img1 - overlap_width + i:width_img1 + i, :] *= blend_width[i]
+            panorama2[:, width_img1 - overlap_width + i:width_img1 + i, :] *= (1 - blend_width[i])
+        
+        result = panorama1 + panorama2
+        
+        cv2.imwrite('result.jpg', result)
+        
+
 
         rows, cols = np.where(result[:, :, 0] != 0)
         min_row, max_row = min(rows), max(rows) + 1
@@ -73,6 +91,9 @@ def main(argv1,argv2):
     img2 = cv2.imread(argv2)
     final=Image_Stitching().blending(img1,img2)
     cv2.imwrite('panorama.jpg', final)
+    # cv2.imshow('Panorama', final)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 if __name__ == '__main__':
     try: 
         main(sys.argv[1],sys.argv[2])
@@ -80,4 +101,6 @@ if __name__ == '__main__':
         print ("Please input two source images: ")
         print ("For example: python Image_Stitching.py '/Users/linrl3/Desktop/picture/p1.jpg' '/Users/linrl3/Desktop/picture/p2.jpg'")
     
-main("C:/Users/Server/Documents/Camera_Batata/esquerdaCorrigida.jpeg", "C:/Users/Server/Documents/Camera_Batata/direitaCorrigida.jpeg")
+main("C:/Users/Server/Documents/StitchingImages/StitchingImage/Imagens/esquerdaCorrigida.jpeg", "C:/Users/Server/Documents/StitchingImages/StitchingImage/Imagens/direitaCorrigida.jpeg")
+
+# C:/Users/Server/Documents/StitchingImages/StitchingImage/Imagens/direitaCorrigida.jpeg

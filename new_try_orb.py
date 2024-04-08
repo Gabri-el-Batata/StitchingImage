@@ -5,8 +5,8 @@ GRAYCOLOR = cv.COLOR_BGR2GRAY
 
 PINKCOLOR = (255, 0, 255)
 
-img1 = cv.imread('foto0.png')
-img2 = cv.imread('foto1.png')
+img2 = cv.imread('StitchingImage\Imagens\direitaCorrigida.jpeg')
+img1 = cv.imread('StitchingImage\Imagens\esquerdaCorrigida.jpeg')
 
 img1_gray = cv.cvtColor(img1, GRAYCOLOR)
 img2_gray = cv.cvtColor(img2, GRAYCOLOR)
