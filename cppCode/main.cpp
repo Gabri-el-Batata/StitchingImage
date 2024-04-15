@@ -20,31 +20,6 @@ bool loadImages(const string& img_path1, const string& img_path2, Mat& img1, Mat
     return true;
 }
 
-// Ptr<Stitcher> createStitcher()
-// {
-//     Ptr<Stitcher> stitcher = Stitcher::create(Stitcher::PANORAMA);
-//     stitcher->setPanoConfidenceThresh(0.8); // Adjust confidence threshold if necessary
-//     stitcher->setWaveCorrection(false);     // Disable wave correction if not needed
-//     //stitcher->setSeamFinder(makePtr<detail::VoronoiSeamFinder>());
-
-//     //Optional stitcher configuration (uncomment if needed)
-//     //stitcher->setRegistrationResol(0.5);
-//     //stitcher->setSeamEstimationResol(0.1);
-//     //stitcher->setCompositingResol(Stitcher::ORIG_RESOL);
-//     //stitcher->setWaveCorrection(false); // Essa liha que deixa as imagens fora de escala.
-//     ////stitcher->setWaveCorrectKind(detail::WAVE_CORRECT_HORIZ);
-//     //stitcher->setFeaturesFinder(ORB::create());
-//     //stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestMatcher>(false));
-//     //stitcher->setBundleAdjuster(makePtr<detail::BundleAdjusterRay>());
-//     //stitcher->setWarper(makePtr<SphericalWarper>());
-//     //stitcher->setExposureCompensator(makePtr<detail::BlocksGainCompensator>());
-//     //stitcher->setBlender(makePtr<detail::MultiBandBlender>());
-
-//     return stitcher;
-// }
-
-
-
 bool stitchImages(const vector<Mat>& imgs, Mat& pano) {
     Stitcher::Status status = stitcher->stitch(imgs, pano);
 
@@ -56,18 +31,43 @@ bool stitchImages(const vector<Mat>& imgs, Mat& pano) {
     return true;
 }
 
-void saveAndDisplay(const Mat &pano)
-{
-    imwrite("C:/Users/Server/Documents/CameraC/result.jpg", pano);
+void saveAndDisplay(const Mat &pano, const string& adress) {
+    std::stringstream ss;
+    ss<<adress<<"/result.jpg";
+    std::string caminho_saida = ss.str();
+
+    imwrite(caminho_saida, pano);
     imshow("Result", pano);
     waitKey(0);
+}
+
+void loadConfig(Ptr<Stitcher>& stitcher) {
+    stitcher->setPanoConfidenceThresh(0.8); // Adjust confidence threshold if necessary
+    stitcher->setFeaturesFinder(ORB::create());
+    stitcher->setBlender(makePtr<detail::MultiBandBlender>());
+
+    stitcher->setRegistrationResol(0.5);
+    stitcher->setSeamEstimationResol(0.1);
+    stitcher->setCompositingResol(Stitcher::ORIG_RESOL);
+    stitcher->setWaveCorrection(false);
+    stitcher->setFeaturesFinder(ORB::create());
+    stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestMatcher>(false));
+    stitcher->setBundleAdjuster(makePtr<detail::BundleAdjusterRay>());
+    stitcher->setWarper(makePtr<SphericalWarper>());
+    stitcher->setExposureCompensator(makePtr<detail::BlocksGainCompensator>());
+    stitcher->setBlender(makePtr<detail::MultiBandBlender>());
 }
 
 int main(int argc, char *argv[])
 {
     // Image paths (consider using a configuration file)
-    string img_path1 = "C://Users//Server//Documents//CameraC//esquerdaCorrigida.jpeg";
-    string img_path2 = "C://Users//Server//Documents//CameraC//direitaCorrigida.jpeg";
+    if (argc != 4){
+        std::cerr << "Uso: " << argv[0] << "<arg1> <arg2> <arg3>" << std::endl;
+    }
+
+    string img_path1 = argv[1];
+    string img_path2 = argv[2];
+    string diretorio_destino = argv[3];
 
     // Load images
     Mat img1, img2;
@@ -81,20 +81,7 @@ int main(int argc, char *argv[])
     imgs.push_back(img1);
     imgs.push_back(img2);
 
-    // Configuritaions of the process of stitching
-    stitcher->setPanoConfidenceThresh(0.8); // Adjust confidence threshold if necessary
-    stitcher->setWaveCorrection(false);     // Disable wave correction if not needed
-
-    stitcher->setRegistrationResol(0.5);
-    stitcher->setSeamEstimationResol(0.1);
-    stitcher->setCompositingResol(Stitcher::ORIG_RESOL);
-    stitcher->setWaveCorrection(false); // Essa liha que deixa as imagens fora de escala.
-    stitcher->setFeaturesFinder(ORB::create());
-    stitcher->setFeaturesMatcher(makePtr<detail::BestOf2NearestMatcher>(false));
-    stitcher->setBundleAdjuster(makePtr<detail::BundleAdjusterRay>());
-    stitcher->setWarper(makePtr<SphericalWarper>());
-    stitcher->setExposureCompensator(makePtr<detail::BlocksGainCompensator>());
-    stitcher->setBlender(makePtr<detail::MultiBandBlender>());
+    loadConfig(stitcher);
 
     // Stitch the images
     Mat pano;
@@ -104,7 +91,7 @@ int main(int argc, char *argv[])
     }
 
     // Save and display the stitched image
-    saveAndDisplay(pano);
+    saveAndDisplay(pano, diretorio_destino);
 
     return 0;
 }
