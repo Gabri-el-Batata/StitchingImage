@@ -8,5 +8,7 @@ Stitching tutorial with OpenCV (https://github.com/whdlgp/Stitching-tutorial-wit
 
 Blog Open Pano (https://ppwwyyxx.com/blog/2016/How-to-Write-a-Panorama-Stitcher/)
 
-
-<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/main/direitaCorrigida.jpeg" alt="Foto esquerda">
+# Imagens
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/main/esquerdaCorrigida.jpeg" alt="Foto esquerda">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/main/direitaCorrigida.jpeg" alt="Foto direita">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/main/result.jpg" alt="Panorama">
