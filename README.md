@@ -7,3 +7,6 @@ Image stitching using SIFT keypoint descriptor and homography matrix (https://co
 Stitching tutorial with OpenCV (https://github.com/whdlgp/Stitching-tutorial-with-OpenCV/blob/master/README.md)
 
 Blog Open Pano (https://ppwwyyxx.com/blog/2016/How-to-Write-a-Panorama-Stitcher/)
+
+
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/main/direitaCorrigida.jpeg" alt="Foto esquerda">
