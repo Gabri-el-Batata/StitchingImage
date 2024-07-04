@@ -1,0 +1,15 @@
+Entendo agora! No contexto da classe `Stitcher` do OpenCV, os modos "PANORAMA" e "SCANS" são usados para definir como as imagens serão compostas para formar uma única imagem panorâmica ou composta. Aqui está como esses modos são interpretados:
+
+1. **PANORAMA**:
+   - Esse modo é ideal para imagens capturadas sob uma perspectiva que pode ser ajustada para criar uma imagem panorâmica ampla. Geralmente, é usado quando você tem várias imagens de um cenário contínuo, como paisagens ou interiores, capturadas de diferentes ângulos.
+   - As imagens são esperadas para terem sido capturadas sob transformações de perspectiva, como as obtidas por uma câmera comum.
+   - O resultado é uma única imagem panorâmica que abrange um campo de visão maior do que qualquer uma das imagens individuais.
+
+2. **SCANS**:
+   - Este modo é adequado para composição de imagens que não necessariamente requerem uma compensação de exposição automática e são tipicamente capturadas sob transformações afins.
+   - Embora o nome sugira digitalizações de documentos, ele também pode ser aplicado a casos como o seu, onde você tem duas imagens de um objeto longo (como um tubo de acrílico) capturadas por duas câmeras diferentes.
+   - Nesse contexto, o OpenCV não exige necessariamente que as imagens sejam de papéis ou documentos, mas sim que elas estejam sob uma transformação afim. Isso significa que as imagens podem ser de qualquer objeto capturado sob uma perspectiva que não mude drasticamente ao longo da distância.
+
+Portanto, usar o modo "SCANS" para suas duas fotos do tubo de acrílico capturadas por duas câmeras diferentes pode ser a abordagem correta, desde que essas imagens possam ser consideradas como estando sob uma transformação afim (ou seja, não há mudanças significativas de perspectiva ao longo do comprimento do tubo).
+
+Em resumo, enquanto "SCANS" no OpenCV é frequentemente associado a digitalizações de documentos, ele pode ser usado para outras composições de imagens que se enquadrem na categoria de transformação afim, como suas fotos do tubo de acrílico capturadas por câmeras.
