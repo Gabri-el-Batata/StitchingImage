@@ -2,15 +2,40 @@ import cv2 as cv
 import os
 from CAMERA_IPS import (CAMERA01, CAMERA02)
 import time
+import subprocess 
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
+
+WIFI_NAME = "CompVisio"
+
+def check_wifi(WIFI_NAME:str):
+
+    wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
+
+    if WIFI_NAME in str(wifi):
+        return True
+    else:
+        return False
+
+def draw_horizontal_line(img):
+    h, w = img.shape[:2]
+    center_y = h // 2
+    color = (0, 0, 255)  # Verde
+    thickness = 2
+
+    img_with_line = img.copy()
+    cv.line(img_with_line, (0, center_y), (w, center_y), color, thickness)
+    cv.line(img_with_line, (0, center_y + 70), (w, center_y + 70), (0, 255, 0), thickness)
+    cv.line(img_with_line, (0, center_y - 70), (w, center_y - 70), (255, 0, 0), thickness)
+
+    return img_with_line
 
 def ReadCamera(ip: str, choice: str):
     address = 'rtsp://admin:cepetro1234@' + ip
     cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
 
     if not cap.isOpened():
-        print("Erro ao conectar ao fluxo RTSP.")
+        print("Erro ao conectar ao fluxo RTSP. Verifique se as câmeras estão ligadas.")
         return
     
     # Buffer de Captura
@@ -19,9 +44,10 @@ def ReadCamera(ip: str, choice: str):
     num = 0
     print("Camera pronta para tirar fotos.")
     
-    
     while cap.isOpened():
         ret, img = cap.read()
+
+        #img = draw_horizontal_line(img)
 
         if not ret:
             print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
@@ -43,16 +69,27 @@ def ReadCamera(ip: str, choice: str):
             num += 1
         cv.imshow('RTSP Frame', img)
                     
-    
     # Apos fechar o video, todas as janelas são destruidas e a variavel reiniciada
     cap.release()
     cv.destroyAllWindows()
 
 camera=""
-choice = str(input("Qual câmera esta sendo utilizada?: [1/2]\n")).strip()
-if choice == "1":
-    camera = CAMERA01
-elif choice == "2":
-    camera = CAMERA02
+while True:
+    choice = str(input("Qual câmera esta sendo utilizada?: [1/2]\n")).strip()
+    if choice == "1":
+        camera = CAMERA01
+        print("CAMERA01 selecionada.")
+        break
+    elif choice == "2":
+        camera = CAMERA02
+        print("CAMERA02 selecionada.")
+        break
+    else:
+        print("Digito incorreto. Digite novamente.\n")
 
-ReadCamera(camera, choice)
+if check_wifi(WIFI_NAME) == True:
+    print("Voce esta conectado no wifi correto.")
+    ReadCamera(camera, choice)
+else:
+    print("Voce não esta conectado no wifi.")
+    exit()

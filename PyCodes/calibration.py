@@ -4,7 +4,7 @@ import glob
 import pickle
 import os
 import random
-import matplotlib as plt
+from matplotlib import pyplot as plt
 
 chessboardSize = (6,9) # Quantidade de cantos
 
@@ -13,7 +13,7 @@ criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 objp = np.zeros((chessboardSize[0] * chessboardSize[1], 3), np.float32)
 objp[:,:2] = np.mgrid[0:chessboardSize[0],0:chessboardSize[1]].T.reshape(-1,2)
 
-tamanho_dos_quadrados_tabuleiro_mm = 23.6
+tamanho_dos_quadrados_tabuleiro_mm = 1
 objp = objp * tamanho_dos_quadrados_tabuleiro_mm
 
 # Arrays to store object points and image points from all the images.
@@ -23,7 +23,7 @@ imgpoints = [] # 2d points in image plane.
 current_directory = os.getcwd().replace('\\', '/')
 current_directory_imgs = current_directory + '/*.png'
 
-print("Esse é o diretório que voce esta tentando acessar, esta correto?: [\033[1mS\033[0m/N] ", current_directory)
+print("Esse é o diretório que voce esta tentando acessar, esta correto?: [\033[1mS\033[0m/n]", current_directory)
 choice = str(input()).strip().upper()
 if not (choice == "S" or choice == ""):
     exit()
@@ -47,8 +47,8 @@ for image in images:
 
         # Draw and display the corners
         cv.drawChessboardCorners(img, chessboardSize, corners2, ret)
-        cv.imshow('img', img)
-        cv.waitKey(500)
+        cv.imshow('Imagem com tabuleiro desenhado', img)
+        cv.waitKey(0)
 
 
 cv.destroyAllWindows()
@@ -57,11 +57,12 @@ cv.destroyAllWindows()
 
 ret, cameraMatrix, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
-print("Camera calibrada: ", ret)
-print("\nMatriz da camera: \n", cameraMatrix)
-print("\nParametros de distorcao: \n", dist)
-print("\nVetores de rotacao: \n", rvecs)
-print("\nVetores de translacao: \n", tvecs)
+with open('calibration_log.txt', 'w') as log_file:
+    log_file.write(f"Camera calibrada: {ret}\n")
+    log_file.write(f"\nMatriz da camera: \n{cameraMatrix}")
+    log_file.write(f"\nParametros de distorcao: \n{dist}\n")
+    log_file.write(f"\nVetores de rotacao: \n{rvecs}\n")
+    log_file.write(f"\nVetores de translacao: \n{tvecs}\n")
 
 
 # Save the camera calibration result for later use (we won't worry about rvecs / tvecs)
@@ -72,14 +73,13 @@ pickle.dump(dist, open( "dist.pkl", "wb" ))
 print("Os arquivos foram salvos no diretório atual.")
 ############## UNDISTORTION #####################################################
 
-imagem_usada = images[random.randint(0, 14)]
+imagem_usada = images[random.randint(0, len(images))].replace('\\', '/')
 
-print(f"A imagem que será usada para testar a calibração será '{imagem_usada}'.")
+print(f"A imagem que será usada para testar a calibração será: '{imagem_usada}'.")
 
-img = cv.imread(current_directory + f'/{imagem_usada}')
+img = cv.imread(imagem_usada)
 h, w = img.shape[:2]
 newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(cameraMatrix, dist, (w,h), 1, (w,h))
-
 
 # Undistort
 dst = cv.undistort(img, cameraMatrix, dist, None, newCameraMatrix)
@@ -90,19 +90,18 @@ if roi[2] > 0 and roi[3] > 0:
     dst = dst[y:y+h, x:x+w]
 else: print("ROI invalida, sera usada a imagem completa.")
 
-cv.imwrite('caliResult1.png', dst)
-
-print("Imagem salva: 'caliResult1.png'")
-
 # Reprojection Error
 mean_error = 0
+errors = []
 
 for i in range(len(objpoints)):
     imgpoints2, _ = cv.projectPoints(objpoints[i], rvecs[i], tvecs[i], cameraMatrix, dist)
     error = cv.norm(imgpoints[i], imgpoints2, cv.NORM_L2)/len(imgpoints2)
+    errors.append(error)
     mean_error += error
 
-print( "total error: {}".format(mean_error/len(objpoints)) )
+print( "Erro médio total: {}".format(mean_error/len(objpoints)))
+print(f"\nErros individuais: \n{errors}\n")
 
 
 if (mean_error/len(objpoints) < 0.5):
@@ -114,13 +113,26 @@ else:
 
 plt.figure(figsize=(20, 10))
 plt.subplot(1, 2, 1)
-plt.imshow(imagem_usada)
-plt.title('Imagem 1 - Imagem com distorção.')
+plt.imshow(cv.cvtColor(cv.imread(imagem_usada), cv.COLOR_BGR2RGB))
+plt.title(f'Imagem com distorção.{cv.imread(imagem_usada).shape[:2]}')
 plt.axis('off')
 
 plt.subplot(1, 2, 2)
-plt.imshow(dst)
-plt.title('Imagem 2 - Imagem sem distorção.')
+plt.imshow(cv.cvtColor(dst, cv.COLOR_BGR2RGB))
+plt.title(f'Imagem sem distorção.{dst.shape[:2]}')
 plt.axis('off')
 
 plt.show()
+plt.plot(errors, marker='o', color='b', linestyle='-', markersize=8, markerfacecolor='red', markeredgewidth=2, markeredgecolor='red') 
+plt.title('Gráfico dos erros individuais')
+plt.xlabel('Imagens')
+plt.ylabel('Erro')
+
+plt.show()
+
+
+salvar_imagem = str(input("Gostaria de salvar a imagem com distorção reduzida? [s/\033[1mN\033[0m]\n")).strip().upper()
+
+if not (salvar_imagem == "N" or salvar_imagem == ""):
+    cv.imwrite('caliResult1.png', dst)
+    print("Imagem salva: 'caliResult1.png'")

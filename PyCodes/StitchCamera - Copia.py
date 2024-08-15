@@ -14,21 +14,25 @@ def stitch_images(image_path1, image_path2):
         return
 
     # Criar o objeto stitcher
-    stitcher = cv.Stitcher.create(mode=cv.STITCHER_PANORAMA)
+    stitcher = cv.Stitcher.create(mode=cv.STITCHER_SCANS)
     
     # Tentar mesclar as imagens
     status, stitched_image = stitcher.stitch([img1, img2])
 
     if status == cv.Stitcher_OK:
         print("Imagens mescladas com sucesso.")
+        cv.imshow('imagem_mesclada.png', stitched_image)
+        cv.waitKey(0)
         cv.imwrite('imagem_mesclada.png', stitched_image)
     else:
         print("Erro ao mesclar as imagens.")
         print(f"Código de retorno: {status}")
 
+cv.destroyAllWindows()
+
 # Caminhos para as imagens
-image_path2 = "C:/Users/Server/Documents/Camera_Batata/img0_Camera1.png"
-image_path1 = "C:/Users/Server/Documents/Camera_Batata/img0_Camera2.png"
+image_path1 = "C:/Users/gabri/Documents/Camera_Batata/equalized_caliResult_Camera1.png"
+image_path2 = "C:/Users/gabri/Documents/Camera_Batata/equalized_caliResult_Camera2.png"
 
 # Mesclar as imagens
 stitch_images(image_path1, image_path2)
