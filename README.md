@@ -24,6 +24,16 @@ https://docs.opencv.org/4.x/d2/d8d/classcv_1_1Stitcher.html#a114713924ec05a0309f
 
 O objetivo é explorar a redução da região de sobreposição e avlaiar a influência desse ato na criação do panorama
 
+- Fotos com distorção
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/img0_Camera1.png" alt = "Foto da câmera de cima">
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/img0_Camera2.png" alt = "Foto da câmera de baixo">
 
+- Fotos sem distorção
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/caliResult_Camera1.png" alt = "Foto da câmera de cima sem distorção">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/caliResult_Camera2.png" alt = "Foto da câmera de cima sem distorção">
+
+Por meio de algumas observações, percebeu-se que era necessário realizar uma equalização nas imagens, pois havia certa variação de iluminação entre as duas imagens, tornando o processo de detecção de correspondencia entre as imagens dificil.
+
+- Imagens equalizadas
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera1.png" alt = "Foto da câmera de cima sem distorção">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera2.png" alt = "Foto da câmera de cima sem distorção">
