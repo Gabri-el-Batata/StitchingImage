@@ -20,3 +20,10 @@ https://docs.opencv.org/4.x/d8/d19/tutorial_stitcher.html
 
 https://docs.opencv.org/4.x/d2/d8d/classcv_1_1Stitcher.html#a114713924ec05a0309f4df7e918c0324
 
+# Segundo semestre de 2024
+
+O objetivo é explorar a redução da região de sobreposição e avlaiar a influência desse ato na criação do panorama
+
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/img0_Camera1.png" alt = "Foto da câmera de cima">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/img0_Camera2.png" alt = "Foto da câmera de baixo">
+
