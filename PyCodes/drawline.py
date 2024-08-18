@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+from utils import plotar_duas_imagens
 
 def draw_horizontal_line(img):
     h, w = img.shape[:2]
@@ -24,17 +25,5 @@ img2 = cv2.imread(img2_path)
 img1_with_line = draw_horizontal_line(img1)
 img2_with_line = draw_horizontal_line(img2)
 
-# Exibe as imagens
-plt.figure(figsize=(20, 10))
 
-plt.subplot(1, 2, 1)
-plt.imshow(cv2.cvtColor(img1_with_line, cv2.COLOR_BGR2RGB))
-plt.title('Imagem 1 com Linha Centralizada')
-plt.axis('off')
-
-plt.subplot(1, 2, 2)
-plt.imshow(cv2.cvtColor(img2_with_line, cv2.COLOR_BGR2RGB))
-plt.title('Imagem 2 com Linha Centralizada')
-plt.axis('off')
-
-plt.show()
+plotar_duas_imagens(img1, img2)

@@ -2,20 +2,11 @@ import cv2 as cv
 import os
 from CAMERA_IPS import (CAMERA01, CAMERA02)
 import time
-import subprocess 
+from utils import check_wifi
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
 
 WIFI_NAME = "CompVisio"
-
-def check_wifi(WIFI_NAME:str):
-
-    wifi = subprocess.check_output(['netsh', 'WLAN', 'show', 'interfaces'])
-
-    if WIFI_NAME in str(wifi):
-        return True
-    else:
-        return False
 
 def draw_horizontal_line(img):
     h, w = img.shape[:2]

@@ -43,8 +43,8 @@ def stitch_images_with_blending(img1, img2):
     return result
 
 # Carrega as imagens
-img1_path = 'caliResult_Camera1.png'
-img2_path = 'caliResult_Camera2.png'
+img1_path = 'equalized_caliResult_Camera1.png'
+img2_path = 'equalized_caliResult_Camera2.png'
 
 img1 = cv2.imread(img1_path)
 img2 = cv2.imread(img2_path)

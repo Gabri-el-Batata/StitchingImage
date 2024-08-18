@@ -2,6 +2,7 @@ import cv2 as cv
 import pickle
 import os
 from matplotlib import pyplot as plt
+from utils import plotar_duas_imagens, remover_distorcao
 
 current_directory = os.getcwd().replace('\\', '/')
 
@@ -42,28 +43,10 @@ except pickle.UnpicklingError:
 ############## UNDISTORTION #####################################################
 
 img = cv.imread(current_directory + f'/img0_Camera{choice_camera}.png')
-h, w = img.shape[:2]
-newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(data1, data2, (w,h), 1, (w,h))
 
-# Undistort
-dst = cv.undistort(img, data1, data2, None, newCameraMatrix)
+dst = remover_distorcao(img, data1, data2)
 
-# crop the image
-x, y, w, h = roi
-dst = dst[y:y+h, x:x+w]
-
-plt.figure(figsize=(20, 10))
-plt.subplot(1, 2, 1)
-plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB))
-plt.title(f'Imagem com distorção. {img.shape[:2]}')
-plt.axis('off')
-
-plt.subplot(1, 2, 2)
-plt.imshow(cv.cvtColor(dst, cv.COLOR_BGR2RGB))
-plt.title(f'Imagem sem distorção. {dst.shape[:2]}')
-plt.axis('off')
-
-plt.show()
+plotar_duas_imagens(img, dst)
 
 salvar_imagem = str(input("Gostaria se salvar a imagem sem distorção?: [s/N]\n")).strip().upper()
 
