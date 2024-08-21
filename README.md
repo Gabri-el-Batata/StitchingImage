@@ -37,3 +37,13 @@ Por meio de algumas observações, percebeu-se que era necessário realizar uma 
 - Imagens equalizadas
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera1.png" alt = "Foto da câmera de cima sem distorção">
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera2.png" alt = "Foto da câmera de cima sem distorção">
+
+# Panoramas criados
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/imagem_mesclada.png" alt = "Panorama 1">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/result.png" alt = "Panorama 2">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/result_plano.png" alt = "Panorama 3">
+
+Panorama 1 -> Esse panorama foi criado usando a função Stitch do opencv, o código do python com a modificação de que a classe foi criada como STITCHER_SCANS.
+Panorama 2 -> Esse panorama foi criado usando a função Stitch do opencv, o código do python padrão.
+Panorama 3 -> Esse panorama foi criado usando a função Stitch do opencv, com a condição de que esse panorama foi distorcido ao redor de uma região plana.
+
