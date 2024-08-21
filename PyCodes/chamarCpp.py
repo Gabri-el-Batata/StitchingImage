@@ -7,8 +7,8 @@ print("Diretorio atual: ", diretorioAtual)
 
 codigoCpp = "C:/Users/Server/Documents/CameraC/build/Debug/CameraC.exe" 
 
-IMG1 = "C:/Users/Server/Documents/Camera_Batata/caliResult_Camera2.png"
-IMG2 = "C:/Users/Server/Documents/Camera_Batata/caliResult_Camera1.png"
+IMG1 = "C:/Users/Server/Documents/Camera_Batata/StitchingImage/equalized_caliResult_Camera2.png"
+IMG2 = "C:/Users/Server/Documents/Camera_Batata/StitchingImage/equalized_caliResult_Camera1.png"
 
 argumentos = [IMG1, IMG2, diretorioAtual]
 
