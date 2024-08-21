@@ -2,7 +2,29 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 import subprocess
 
-def plotar_duas_imagens(img1:cv.typing.MatLike, img2:cv.typing.MatLike) -> None:
+#### Constantes
+
+ARUCO_DICT = {
+  "DICT_4X4_50": cv.aruco.DICT_4X4_50,
+  "DICT_4X4_100": cv.aruco.DICT_4X4_100,
+  "DICT_4X4_250": cv.aruco.DICT_4X4_250,
+  "DICT_4X4_1000": cv.aruco.DICT_4X4_1000,
+  "DICT_5X5_50": cv.aruco.DICT_5X5_50,
+  "DICT_5X5_100": cv.aruco.DICT_5X5_100,
+  "DICT_5X5_250": cv.aruco.DICT_5X5_250,
+  "DICT_5X5_1000": cv.aruco.DICT_5X5_1000,
+  "DICT_6X6_50": cv.aruco.DICT_6X6_50,
+  "DICT_6X6_100": cv.aruco.DICT_6X6_100,
+  "DICT_6X6_250": cv.aruco.DICT_6X6_250,
+  "DICT_6X6_1000": cv.aruco.DICT_6X6_1000,
+  "DICT_7X7_50": cv.aruco.DICT_7X7_50,
+  "DICT_7X7_100": cv.aruco.DICT_7X7_100,
+  "DICT_7X7_250": cv.aruco.DICT_7X7_250,
+  "DICT_7X7_1000": cv.aruco.DICT_7X7_1000,
+  "DICT_ARUCO_ORIGINAL": cv.aruco.DICT_ARUCO_ORIGINAL
+}
+
+def plotar_duas_imagens(img1, img2) -> None:
     plt.figure(figsize=(20, 10))
 
     plt.subplot(1, 2, 1)
@@ -128,3 +150,50 @@ def stitch_images(image_path1, image_path2):
         print(f"Código de retorno: {status}")
 
     cv.destroyAllWindows()
+
+
+def detect_markers(image, desired_aruco_dictionary: str) -> None:
+  
+  this_aruco_dict = cv.aruco.Dictionary_get(ARUCO_DICT[desired_aruco_dictionary])
+  this_aruco_parameters = cv.aruco.DetectorParameters_create()
+
+  (corners, ids, _) = cv.aruco.detectMarkers(image, this_aruco_dict, parameters=this_aruco_parameters)
+
+  if len(corners) > 0:
+    # Flatten the ArUco IDs list
+    ids = ids.flatten()
+
+    # Loop over the detected ArUco corners
+    for (marker_corner, marker_id) in zip(corners, ids):
+    
+      # Extract the marker corners
+      corners = marker_corner.reshape((4, 2))
+      (top_left, top_right, bottom_right, bottom_left) = corners
+
+      # Convert the (x,y) coordinate pairs to integers
+      top_right = (int(top_right[0]), int(top_right[1]))
+      bottom_right = (int(bottom_right[0]), int(bottom_right[1]))
+      bottom_left = (int(bottom_left[0]), int(bottom_left[1]))
+      top_left = (int(top_left[0]), int(top_left[1]))
+
+      # Draw the bounding box of the ArUco detection
+      cv.line(image, top_left, top_right, (0, 255, 0), 2)
+      cv.line(image, top_right, bottom_right, (0, 255, 0), 2)
+      cv.line(image, bottom_right, bottom_left, (0, 255, 0), 2)
+      cv.line(image, bottom_left, top_left, (0, 255, 0), 2)
+
+      # Calculate and draw the center of the ArUco marker
+      center_x = int((top_left[0] + bottom_right[0]) / 2.0)
+      center_y = int((top_left[1] + bottom_right[1]) / 2.0)
+      cv.circle(image, (center_x, center_y), 4, (0, 0, 255), -1)
+
+      # Draw the ArUco marker ID on the video image1
+      # The ID is always located at the top_left of the ArUco marker
+      cv.putText(image, str(marker_id), 
+        (top_left[0], top_left[1] - 15),
+        cv.FONT_HERSHEY_SIMPLEX,
+        0.5, (0, 255, 0), 2)
+
+      # Display the resulting image1
+  cv.imshow('Imagem com ArUco detectado',image)
+  cv.waitKey(0)
