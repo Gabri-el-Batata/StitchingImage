@@ -10,7 +10,7 @@ equalized_img2 = equalizar_imagem_colorida(img2)
 
 plotar_duas_imagens(equalized_img2, equalized_img1)
 
-choice = str(input("Deseja salvar as imagens equalizadas? [S/n]")).strip().upper()
+choice = str(input("Deseja salvar as imagens equalizadas? [S/n]\n")).strip().upper()
 if (choice == "S" or choice ==""):
     print("Salvando as imagens equalizadas.")
     cv2.imwrite('equalized_caliResult_Camera1.png', equalized_img1)
