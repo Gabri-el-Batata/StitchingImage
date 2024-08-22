@@ -5,8 +5,8 @@ from utils import detect_markers
 desired_aruco_dictionary = "DICT_6X6_250"
 
 # Carregar as imagens
-image1 = cv.imread("C:/Users/gabri/Documents/Camera_Batata/equalized_caliResult_Camera2.png")
-image2 = cv.imread("C:/Users/gabri/Documents/Camera_Batata/equalized_caliResult_Camera1.png")
+image1 = cv.imread("/home/ml1/Documents/Camera_Batata/StitchingImage/equalized_caliResult_Camera1.png")
+image2 = cv.imread("/home/ml1/Documents/Camera_Batata/StitchingImage/equalized_caliResult_Camera2.png")
 
 
 # Configurar o dicionário e os parâmetros ArUco
@@ -21,6 +21,7 @@ corners1, ids1, _ = detector.detectMarkers(image1)
 corners2, ids2, _ = detector.detectMarkers(image2)
 
 # Verificar se pelo menos um marcador foi detectado em cada imagem
+
 if len(corners1) > 0 and len(corners2) > 0:
     # Pegar o centro do primeiro marcador encontrado em cada imagem
     center1 = np.mean(corners1[0][0], axis=0)
