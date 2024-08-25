@@ -51,7 +51,7 @@ Panorama 3 -> Esse panorama foi criado usando a função Stitch do opencv, com a
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/panorama_aruco.png" alt = "Panorama feito manualmente com rastreamento do aruco">
 
 # Panorama final com o blur na região de sobreposição
-<img src="=https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panorama_aruco_blur.png" alt = "Panorama feito manualmente com rastreamento do aruco e com blur">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panorama_aruco_blur.png" alt = "Panorama feito manualmente com rastreamento do aruco e com blur">
 
 
 
