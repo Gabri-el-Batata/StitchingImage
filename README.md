@@ -35,8 +35,8 @@ O objetivo é explorar a redução da região de sobreposição e avlaiar a infl
 Por meio de algumas observações, percebeu-se que era necessário realizar uma equalização nas imagens, pois havia certa variação de iluminação entre as duas imagens, tornando o processo de detecção de correspondencia entre as imagens dificil.
 
 - Imagens equalizadas
-<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera1.png" alt = "Foto da câmera de cima sem distorção">
-<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera2.png" alt = "Foto da câmera de cima sem distorção">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera1.png" alt = "Foto da câmera de cima sem distorção equalizada">
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/equalized_caliResult_Camera2.png" alt = "Foto da câmera de cima sem distorção equalizada">
 
 # Panoramas criados
 <img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/imagem_mesclada.png" alt = "Panorama 1">
@@ -46,4 +46,12 @@ Por meio de algumas observações, percebeu-se que era necessário realizar uma 
 Panorama 1 -> Esse panorama foi criado usando a função Stitch do opencv, o código do python com a modificação de que a classe foi criada como STITCHER_SCANS.
 Panorama 2 -> Esse panorama foi criado usando a função Stitch do opencv, o código do python padrão.
 Panorama 3 -> Esse panorama foi criado usando a função Stitch do opencv, com a condição de que esse panorama foi distorcido ao redor de uma região plana.
+
+# Panorama criado manualmente
+<img src="https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panoramas/panorama_aruco.png" alt = "Panorama feito manualmente com rastreamento do aruco">
+
+# Panorama final com o blur na região de sobreposição
+<img src="=https://github.com/Gabri-el-Batata/StitchingImage/blob/batata_dev/panorama_aruco_blur.png" alt = "Panorama feito manualmente com rastreamento do aruco e com blur">
+
+
 
