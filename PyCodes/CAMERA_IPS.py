@@ -2,7 +2,6 @@
 ESte arquivo contem os ip's das cameras utilizadas no laboratorio atualmente
 '''
 
-
 CAMERA_MEZANINO = "143.106.170.253/Streaming/Channels/101"
 
 CAMERA_TESTE = "143.106.170.199"

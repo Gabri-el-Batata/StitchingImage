@@ -1,6 +1,7 @@
 import cv2 as cv
 from matplotlib import pyplot as plt
 import subprocess
+import os
 
 #### Constantes
 
@@ -23,6 +24,14 @@ ARUCO_DICT = {
   "DICT_7X7_1000": cv.aruco.DICT_7X7_1000,
   "DICT_ARUCO_ORIGINAL": cv.aruco.DICT_ARUCO_ORIGINAL
 }
+
+VERDE = (0, 255, 0)
+VERMELHO = (0, 0, 255)
+
+# Funções
+
+def get_current_directory() -> str:
+    return os.getcwd().replace('\\', '/')
 
 def plotar_duas_imagens(img1, img2) -> None:
     plt.figure(figsize=(20, 10))
@@ -152,48 +161,117 @@ def stitch_images(image_path1, image_path2):
     cv.destroyAllWindows()
 
 
-def detect_markers(image, desired_aruco_dictionary: str) -> None:
+# def detect_markers(image, desired_aruco_dictionary: str) -> None:
   
-  this_aruco_dict = cv.aruco.Dictionary_get(ARUCO_DICT[desired_aruco_dictionary])
-  this_aruco_parameters = cv.aruco.DetectorParameters_create()
+#   this_aruco_dict = cv.aruco.Dictionary_get(ARUCO_DICT[desired_aruco_dictionary])
+#   this_aruco_parameters = cv.aruco.DetectorParameters_create()
 
-  (corners, ids, _) = cv.aruco.detectMarkers(image, this_aruco_dict, parameters=this_aruco_parameters)
+#   (corners, ids, _) = cv.aruco.detectMarkers(image, this_aruco_dict, parameters=this_aruco_parameters)
 
-  if len(corners) > 0:
-    # Flatten the ArUco IDs list
-    ids = ids.flatten()
+#   if len(corners) > 0:
+#     # Flatten the ArUco IDs list
+#     ids = ids.flatten()
 
-    # Loop over the detected ArUco corners
-    for (marker_corner, marker_id) in zip(corners, ids):
+#     # Loop over the detected ArUco corners
+#     for (marker_corner, marker_id) in zip(corners, ids):
     
-      # Extract the marker corners
-      corners = marker_corner.reshape((4, 2))
-      (top_left, top_right, bottom_right, bottom_left) = corners
+#       # Extract the marker corners
+#       corners = marker_corner.reshape((4, 2))
+#       (top_left, top_right, bottom_right, bottom_left) = corners
 
-      # Convert the (x,y) coordinate pairs to integers
-      top_right = (int(top_right[0]), int(top_right[1]))
-      bottom_right = (int(bottom_right[0]), int(bottom_right[1]))
-      bottom_left = (int(bottom_left[0]), int(bottom_left[1]))
-      top_left = (int(top_left[0]), int(top_left[1]))
+#       # Convert the (x,y) coordinate pairs to integers
+#       top_right = (int(top_right[0]), int(top_right[1]))
+#       bottom_right = (int(bottom_right[0]), int(bottom_right[1]))
+#       bottom_left = (int(bottom_left[0]), int(bottom_left[1]))
+#       top_left = (int(top_left[0]), int(top_left[1]))
 
-      # Draw the bounding box of the ArUco detection
-      cv.line(image, top_left, top_right, (0, 255, 0), 2)
-      cv.line(image, top_right, bottom_right, (0, 255, 0), 2)
-      cv.line(image, bottom_right, bottom_left, (0, 255, 0), 2)
-      cv.line(image, bottom_left, top_left, (0, 255, 0), 2)
+#       # Draw the bounding box of the ArUco detection
+#       cv.line(image, top_left, top_right, (0, 255, 0), 2)
+#       cv.line(image, top_right, bottom_right, (0, 255, 0), 2)
+#       cv.line(image, bottom_right, bottom_left, (0, 255, 0), 2)
+#       cv.line(image, bottom_left, top_left, (0, 255, 0), 2)
 
-      # Calculate and draw the center of the ArUco marker
-      center_x = int((top_left[0] + bottom_right[0]) / 2.0)
-      center_y = int((top_left[1] + bottom_right[1]) / 2.0)
-      cv.circle(image, (center_x, center_y), 4, (0, 0, 255), -1)
+#       # Calculate and draw the center of the ArUco marker
+#       center_x = int((top_left[0] + bottom_right[0]) / 2.0)
+#       center_y = int((top_left[1] + bottom_right[1]) / 2.0)
+#       cv.circle(image, (center_x, center_y), 4, (0, 0, 255), -1)
 
-      # Draw the ArUco marker ID on the video image1
-      # The ID is always located at the top_left of the ArUco marker
-      cv.putText(image, str(marker_id), 
-        (top_left[0], top_left[1] - 15),
-        cv.FONT_HERSHEY_SIMPLEX,
-        0.5, (0, 255, 0), 2)
+#       # Draw the ArUco marker ID on the video image1
+#       # The ID is always located at the top_left of the ArUco marker
+#       cv.putText(image, str(marker_id), 
+#         (top_left[0], top_left[1] - 15),
+#         cv.FONT_HERSHEY_SIMPLEX,
+#         0.5, (0, 255, 0), 2)
 
-      # Display the resulting image1
-  cv.imshow('Imagem com ArUco detectado',image)
-  cv.waitKey(0)
+#       # Display the resulting image1
+#   cv.imshow('Imagem com ArUco detectado',image)
+#   cv.waitKey(0)
+  
+def confirma_leitura_imagens(img1_path, img2_path):  
+    # Carregar as imagens
+    image1 = cv.imread(img1_path)
+    if image1 is None:
+        print(f"Imagem 1 não encontrada no diretório fornecido: <{img1_path}>", )
+        exit()
+    image2 = cv.imread(img2_path)
+    if image2 is None:
+        print(f"Imagem 2 não encontrada no diretório fornecido: <{img2_path}>")
+        exit()
+
+    return image1, image2
+
+def detectar_cantos_arucos(image1, image2):
+    '''
+    Codigo com a finalidade de detectar os códigos ArUcos. Atente-se ao parâmetro de aruco_dict.
+    '''
+    aruco_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_250)
+    parameters = cv.aruco.DetectorParameters()
+    detector = cv.aruco.ArucoDetector(aruco_dict, parameters)
+    
+    # Detectar os marcadores ArUco na primeira imagem
+    corners1, ids1, _ = detector.detectMarkers(image1)
+    # Detectar os marcadores ArUco na segunda imagem
+    corners2, ids2, _ = detector.detectMarkers(image2)
+    
+    if len(corners1) > 0 and len(corners2) > 0:
+        print("Foram detectador códigos ArUcos em ambas as imagens.")
+        return corners1, ids1, corners2, ids2
+    else:
+        print("Não foram detectados marcadores ArUco em ambas as imagens.")
+        exit()
+
+def desenha_marcadores(image, corners, ids):
+    ids = ids.flatten()
+    
+    image=image.copy()
+ 
+	# loop sobre os cantos dos marcadores Arucos detectados
+    for (markerCorner, markerID) in zip(corners, ids):
+        corners = markerCorner.reshape((4, 2))
+        (topLeft, topRight, bottomRight, bottomLeft) = corners
+
+		# Conerter os pontos dos cantos do marcador ArUco em números inteiros
+        topRight = (int(topRight[0]), int(topRight[1]))
+        bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+        bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+        topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+		# Desenhar uma retângulo representando que marcou o marcador ArUco
+        cv.line(image, topLeft, topRight, VERDE, 2)
+        cv.line(image, topRight, bottomRight, VERDE, 2)
+        cv.line(image, bottomRight, bottomLeft, VERDE, 2)
+        cv.line(image, bottomLeft, topLeft, VERDE, 2)
+
+		# Calcular as coordenadas do centro do marcador aruco e desenhar um ponto nessa posição
+        cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+        cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+        cv.circle(image, (cX, cY), 4, VERMELHO, -1)
+
+		# Colocar o ID do marcador aruco na imagem
+        cv.putText(image, str(markerID), (topLeft[0], topLeft[1] - 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        print("[INFO] ID do marcador ArUco: {}".format(markerID))
+
+		# show the output image
+    cv.imshow("Imagem com os marcadores ArUcos detectados", image)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
