@@ -2,6 +2,8 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 import subprocess
 import os
+import pickle
+import time
 
 #### Constantes
 
@@ -29,6 +31,66 @@ VERDE = (0, 255, 0)
 VERMELHO = (0, 0, 255)
 
 # Funções
+
+def getImage(ip: str, choice: str):
+    os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
+    address = 'rtsp://admin:cepetro1234@' + ip
+    cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
+
+    if not cap.isOpened():
+        print("Erro ao conectar ao fluxo RTSP. Verifique se as câmeras estão ligadas.")
+        return
+    
+    # Buffer de Captura
+    cap.set(cv.CAP_PROP_BUFFERSIZE, 3)
+
+    num = 0
+    print("Camera pronta para tirar fotos.")
+    
+    while cap.isOpened():
+        ret, img = cap.read()
+
+        #img = draw_horizontal_line(img)
+
+        if not ret:
+            print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
+            cap.release()
+            cap = cv.VideoCapture(address, cv.CAP_FFMPEG)
+            time.sleep(1)
+            continue
+
+        k = cv.waitKey(10)
+        
+        if k == 27:  # Pressione 'esc' para sair
+            break
+        
+        elif k == ord('s'):  # Pressione 's' para salvar as imagens
+            #time.sleep(2)
+            filename = f'img{num}_Camera{choice}.png'
+            cv.imwrite(filename, img)
+            print(f"Imagem salva: {filename}")
+            num += 1
+        cv.imshow('RTSP Frame', img)
+                    
+    # Apos fechar o video, todas as janelas são destruidas e a variavel reiniciada
+    cap.release()
+    cv.destroyAllWindows()
+
+def confirma_escolha(valor:str):
+    if valor in ["S", ""]:
+        return True
+    else:
+        return False
+
+def get_data_pkl(path):
+    try:
+        with open(path, 'rb') as f1:
+            data1 = pickle.load(f1)
+            print(f"Dados do arquivo {path} carregados com sucesso.")
+    except FileNotFoundError:
+        print(f"Erro: O arquivo {path} não foi encontrado.")
+    except pickle.UnpicklingError:
+        print(f"Erro: Não foi possível desserializar o conteúdo de {path}.")
 
 def get_current_directory() -> str:
     return os.getcwd().replace('\\', '/')

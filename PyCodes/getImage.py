@@ -4,8 +4,6 @@ from CAMERA_IPS import (CAMERA01, CAMERA02)
 import time
 from utils import check_wifi
 
-os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
-
 WIFI_NAME = "CompVisio"
 
 def draw_horizontal_line(img):
@@ -21,7 +19,8 @@ def draw_horizontal_line(img):
 
     return img_with_line
 
-def ReadCamera(ip: str, choice: str):
+def getImage(ip: str, choice: str):
+    os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
     address = 'rtsp://admin:cepetro1234@' + ip
     cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
 
@@ -80,7 +79,7 @@ while True:
 
 if check_wifi(WIFI_NAME) == True:
     print("Voce esta conectado no wifi correto.")
-    ReadCamera(camera, choice)
+    getImage(camera, choice)
 else:
     print("Voce não esta conectado no wifi.")
     exit()

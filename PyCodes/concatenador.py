@@ -49,9 +49,10 @@ cv.imshow('Panorama', panorama)
 cv.waitKey(0)
 cv.destroyAllWindows()
 
-choice = str(input("Você deseja salvar a imagem final? [S/n]\n")).upper().split()
+choice = str(input("Você deseja salvar a imagem final? [S/n]\n")).upper().strip()
 
 if not (choice == "S" or choice == ""):
     exit()
 
 cv.imwrite('panorama_aruco.png', panorama)
+print("Salvando Panorama.")

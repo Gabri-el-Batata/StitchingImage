@@ -2,11 +2,12 @@ import cv2 as cv
 import pickle
 import os
 from matplotlib import pyplot as plt
-from utils import plotar_duas_imagens, remover_distorcao
+from utils import plotar_duas_imagens, remover_distorcao, get_data_pkl
 
 current_directory = os.getcwd().replace('\\', '/')
 
-choice_camera = str(input("Qual câmera você vai acessar?: [1/2]\n")).strip()
+choice_camera = str(input("Qual câmera você capturou a imagem?: [1/2]\n")).strip()
+#number = str(input("Qual o número da foto?\n")).strip()
 
 cameraMatrix = f'/calibracao_camera1/cameraMatrix.pkl'
 dist = f'/calibracao_camera1/dist.pkl'
@@ -22,23 +23,8 @@ choice = str(input("Esta correto?: [S/n]\n")).strip().upper()
 if choice == "N":
     exit()
 
-try:
-    with open(cameraMatrix_path, 'rb') as f1:
-        data1 = pickle.load(f1)
-        print(f"Dados do arquivo {cameraMatrix} carregados com sucesso.")
-except FileNotFoundError:
-    print(f"Erro: O arquivo {cameraMatrix} não foi encontrado.")
-except pickle.UnpicklingError:
-    print(f"Erro: Não foi possível desserializar o conteúdo de {cameraMatrix}.")
-
-try:
-    with open(dist_path, 'rb') as f2:
-        data2 = pickle.load(f2)
-        print(f"Dados do arquivo {dist} carregados com sucesso.")
-except FileNotFoundError:
-    print(f"Erro: O arquivo {dist} não foi encontrado.")
-except pickle.UnpicklingError:
-    print(f"Erro: Não foi possível desserializar o conteúdo de {dist}.")
+data1 = get_data_pkl(cameraMatrix_path)
+data2 = get_data_pkl(dist_path)
 
 ############## UNDISTORTION #####################################################
 
