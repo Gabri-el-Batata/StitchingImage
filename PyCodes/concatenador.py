@@ -11,14 +11,11 @@ img2_path = current_directory + "/" + "equalized_caliResult_Camera1.png"
 image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
 
 # Configurar o dicionário e os parâmetros ArUco
-aruco_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_250)
-parameters = cv.aruco.DetectorParameters()
-
-detector = cv.aruco.ArucoDetector(aruco_dict, parameters)
 
 corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
 
 desenha_marcadores(image1, corners1, ids1)
+desenha_marcadores(image2, corners2, ids2)
 
 # Pegar o centro do primeiro marcador encontrado em cada imagem
 center1 = np.mean(corners1[0][0], axis=0)

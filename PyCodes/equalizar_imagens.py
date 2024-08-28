@@ -8,7 +8,7 @@ img2 = cv2.imread('caliResult_Camera2.png')
 equalized_img1 = equalizar_imagem_colorida(img1)
 equalized_img2 = equalizar_imagem_colorida(img2)
 
-plotar_duas_imagens(equalized_img2, equalized_img1)
+plotar_duas_imagens(img1, equalized_img1)
 
 choice = str(input("Deseja salvar as imagens equalizadas? [S/n]\n")).strip().upper()
 if (choice == "S" or choice ==""):

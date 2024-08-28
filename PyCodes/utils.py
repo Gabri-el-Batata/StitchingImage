@@ -32,6 +32,13 @@ VERMELHO = (0, 0, 255)
 
 # Funções
 
+def confirma_imagem(path:str) -> None:
+    if cv.imread(path) is None:
+        print("Imagem não encontrada.")
+        exit()
+    else:
+        pass
+
 def getImage(ip: str, choice: str):
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
     address = 'rtsp://admin:cepetro1234@' + ip
@@ -78,9 +85,10 @@ def getImage(ip: str, choice: str):
 
 def confirma_escolha(valor:str):
     if valor in ["S", ""]:
-        return True
+        pass
     else:
-        return False
+        print("Digito Incorreto.")
+        exit()
 
 def get_data_pkl(path):
     try:
@@ -89,8 +97,12 @@ def get_data_pkl(path):
             print(f"Dados do arquivo {path} carregados com sucesso.")
     except FileNotFoundError:
         print(f"Erro: O arquivo {path} não foi encontrado.")
+        exit()
     except pickle.UnpicklingError:
         print(f"Erro: Não foi possível desserializar o conteúdo de {path}.")
+        exit()
+    
+    return data1
 
 def get_current_directory() -> str:
     return os.getcwd().replace('\\', '/')
@@ -282,13 +294,20 @@ def confirma_leitura_imagens(img1_path, img2_path):
 
     return image1, image2
 
+def carregar_dados_detector_aruco():
+    aruco_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_250)
+    parameters = cv.aruco.DetectorParameters()
+    detector = cv.aruco.ArucoDetector(aruco_dict, parameters)
+    
+    return detector
+
+
 def detectar_cantos_arucos(image1, image2):
     '''
     Codigo com a finalidade de detectar os códigos ArUcos. Atente-se ao parâmetro de aruco_dict.
     '''
-    aruco_dict = cv.aruco.getPredefinedDictionary(cv.aruco.DICT_6X6_250)
-    parameters = cv.aruco.DetectorParameters()
-    detector = cv.aruco.ArucoDetector(aruco_dict, parameters)
+    
+    detector = carregar_dados_detector_aruco()
     
     # Detectar os marcadores ArUco na primeira imagem
     corners1, ids1, _ = detector.detectMarkers(image1)

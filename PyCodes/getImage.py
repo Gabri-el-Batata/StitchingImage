@@ -6,6 +6,8 @@ from utils import check_wifi
 
 WIFI_NAME = "CompVisio"
 
+os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
+
 def draw_horizontal_line(img):
     h, w = img.shape[:2]
     center_y = h // 2
@@ -20,7 +22,6 @@ def draw_horizontal_line(img):
     return img_with_line
 
 def getImage(ip: str, choice: str):
-    os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
     address = 'rtsp://admin:cepetro1234@' + ip
     cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
 
