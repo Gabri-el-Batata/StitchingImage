@@ -39,7 +39,7 @@ choice_camera = str(input("De qual câmera você vai processar a imagem? [1/2]\n
 if choice_camera not in ['1', '2']:
     print("Você não digitou um número correto. Deve ser 1 ou 2.")
 
-undistort_choice = str(input("\n ---------- Começar processo de remoção de distorção? [S/n] ---------- \n")).upper().strip()
+undistort_choice = "S" #str(input("\n ---------- Começar processo de remoção de distorção? [S/n] ---------- \n")).upper().strip()
 
 confirma_escolha(undistort_choice)
 
@@ -52,18 +52,18 @@ dist_path = current_directory + dist
 print("Diretório para cameraMatrix: ", cameraMatrix_path)
 print("Diretório para dist: ", dist_path)
 
-choice = str(input("\n Esta correto?: [S/n]\n")).strip().upper()
+choice = "S" #str(input("\n Esta correto?: [S/n]\n")).strip().upper()
 
 confirma_escolha(choice)
 
 data1 = get_data_pkl(cameraMatrix_path)
 data2 = get_data_pkl(dist_path)
 
-number = str(input("\nQual o número da imagem que você quer remover distorção?\n")).strip()
+number = str(input("\nQual o número da imagem que você vai pré-processar?\n")).strip()
 
 imagem_escolhida = f'img{number}_Camera{choice_camera}.png'
 
-imagem_sem_distorcao = f'caliResult_Camera{choice_camera}.png'
+imagem_sem_distorcao = f'{number}caliResult_Camera{choice_camera}.png'
 
 #imagem_escolhida = current_directory + "/" + imagem_escolhida
 
@@ -75,20 +75,20 @@ def remover_distorcao_e_plotar(imagem_escolhida, data1, data2):
 
     dst = remover_distorcao(img, data1, data2)
 
-    plotar_duas_imagens(img, dst)
+    #plotar_duas_imagens(img, dst)
 
-    salvar_imagem = str(input("Gostaria de salvar a imagem sem distorção?: [S/n]\n")).strip().upper()
+    #salvar_imagem = str(input("Gostaria de salvar a imagem sem distorção?: [S/n]\n")).strip().upper()
 
-    if (salvar_imagem == "S" or salvar_imagem == ""):
-        cv.imwrite(imagem_sem_distorcao, dst)
-        print("A imagem foi salva como: ", imagem_sem_distorcao)
-    else:
-        print("A imagem não foi salva.")
-        exit()
+    #if (salvar_imagem == "S" or salvar_imagem == ""):
+    cv.imwrite(imagem_sem_distorcao, dst)
+    print("A imagem foi salva como: ", imagem_sem_distorcao)
+    #else:
+        #print("A imagem não foi salva.")
+        #exit()
 
 remover_distorcao_e_plotar(imagem_escolhida, data1, data2)
 
-equalizar_choice = str(input("---------- Começar processo de equalização de imagem? [S/n] ---------- \n")).upper().strip()
+equalizar_choice = "S" #str(input("---------- Começar processo de equalização de imagem? [S/n] ---------- \n")).upper().strip()
 
 confirma_imagem(imagem_sem_distorcao)
 
@@ -96,9 +96,9 @@ imagem_equalizada = equalizar_imagem_colorida(cv.imread(imagem_sem_distorcao))
 
 nome_imagem_equalizada = 'equalized_' + imagem_sem_distorcao
 
-plotar_duas_imagens(cv.imread(imagem_escolhida), imagem_equalizada)
+#plotar_duas_imagens(cv.imread(imagem_escolhida), imagem_equalizada)
 
-choice = str(input("\nDeseja salvar a imagem equalizada? [S/n]\n")).strip().upper()
+choice = "S" #str(input("\nDeseja salvar a imagem equalizada? [S/n]\n")).strip().upper()
 
 if (choice == "S" or choice ==""):
     print("Salvando imagem equalizada com o nome: ", nome_imagem_equalizada)

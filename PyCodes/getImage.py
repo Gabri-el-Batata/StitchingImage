@@ -32,7 +32,7 @@ def getImage(ip: str, choice: str):
     # Buffer de Captura
     cap.set(cv.CAP_PROP_BUFFERSIZE, 3)
 
-    num = 0
+    num = int(input("Digite o número da foto:\n"))
     print("Camera pronta para tirar fotos.")
     
     while cap.isOpened():

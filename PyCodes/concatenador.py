@@ -3,10 +3,15 @@ import numpy as np
 from utils import get_current_directory, confirma_leitura_imagens, detectar_cantos_arucos, desenha_marcadores
 
 current_directory = get_current_directory()
+
+# Entradas
+
 print("Esse é o diretório atual: ", current_directory)
 
-img1_path = current_directory + "/" + "equalized_caliResult_Camera2.png"
-img2_path = current_directory + "/" + "equalized_caliResult_Camera1.png"
+number = str(input("Qual número da imagem que você vai concatenar: \n")).strip()
+
+img1_path = current_directory + "/" + f"{number}caliResult_Camera2.png"
+img2_path = current_directory + "/" + f"{number}caliResult_Camera1.png"
 
 image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
 
@@ -14,8 +19,8 @@ image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
 
 corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
 
-desenha_marcadores(image1, corners1, ids1)
-desenha_marcadores(image2, corners2, ids2)
+#desenha_marcadores(image1, corners1, ids1)
+#desenha_marcadores(image2, corners2, ids2)
 
 # Pegar o centro do primeiro marcador encontrado em cada imagem
 center1 = np.mean(corners1[0][0], axis=0)
@@ -51,5 +56,5 @@ choice = str(input("Você deseja salvar a imagem final? [S/n]\n")).upper().strip
 if not (choice == "S" or choice == ""):
     exit()
 
-cv.imwrite('panorama_aruco.png', panorama)
+cv.imwrite(f'panoramas/{number}panorama_aruco_normal.png', panorama)
 print("Salvando Panorama.")
