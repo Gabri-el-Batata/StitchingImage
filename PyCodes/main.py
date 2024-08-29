@@ -39,6 +39,8 @@ choice_camera = str(input("De qual câmera você vai processar a imagem? [1/2]\n
 if choice_camera not in ['1', '2']:
     print("Você não digitou um número correto. Deve ser 1 ou 2.")
 
+number = str(input("\nQual o número da imagem que você vai pré-processar?\n")).strip()
+
 undistort_choice = "S" #str(input("\n ---------- Começar processo de remoção de distorção? [S/n] ---------- \n")).upper().strip()
 
 confirma_escolha(undistort_choice)
@@ -58,8 +60,6 @@ confirma_escolha(choice)
 
 data1 = get_data_pkl(cameraMatrix_path)
 data2 = get_data_pkl(dist_path)
-
-number = str(input("\nQual o número da imagem que você vai pré-processar?\n")).strip()
 
 imagem_escolhida = f'img{number}_Camera{choice_camera}.png'
 
@@ -105,6 +105,7 @@ if (choice == "S" or choice ==""):
     cv.imwrite(nome_imagem_equalizada, imagem_equalizada)
 else:
     print("As imagem não foi salva.")
+
     
 #### Iniciar processo de concatenação
 
