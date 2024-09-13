@@ -93,6 +93,7 @@ def detectar_cantos(chessboardSize: tuple, tamanho_dos_quadrados_tabuleiro_mm: f
 
             # Draw and display the corners
             cv.drawChessboardCorners(img, chessboardSize, corners2, ret)
+            #img = cv.resize(img, (1280, 720))
             cv.imshow('Imagem com tabuleiro desenhado', img)
             cv.waitKey(0)
     cv.destroyAllWindows()
