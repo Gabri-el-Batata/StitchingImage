@@ -71,6 +71,7 @@ def getImage(ip: str, choice: str):
     for i in range(segundos, -1):
         print(f"Começando a filmagem em {i+1} segundos...")
         time.sleep(1)
+        print('oi')
         
     
     while cap.isOpened():
