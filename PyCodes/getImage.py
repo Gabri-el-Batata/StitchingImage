@@ -4,10 +4,20 @@ import numpy as np
 from CAMERA_IPS import (CAMERA01, CAMERA02)
 import time
 from utils import check_wifi
+from pythonping import ping
 
 WIFI_NAME = "CompVisio"
 
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
+
+def ping_camera(ip):
+    response = os.system(f"ping -c 1 {ip}")
+    if response == 0:
+        print(f"{ip} is reachable.")
+        return True
+    else:
+        print(f"{ip} is not reachable.")
+        return False
 
 def clear_buffer_two(cap1, cap2, frames_to_clear=10):
     # Limpa os frames do buffer chamando grab() múltiplas vezes
@@ -57,11 +67,17 @@ def getImage(ip: str, choice: str):
     resolucao_original = (1920, 1080)
     resolucao_reduzida = (1280, 720)
     
+    segundos = 3
+    for i in range(segundos, -1):
+        print(f"Começando a filmagem em {i+1} segundos...")
+        time.sleep(1)
+        
+    
     while cap.isOpened():
         ret, img = cap.read()
-
+        
         #img = draw_horizontal_line(img)
-        #img = cv.resize(img, resolucao_reduzida)
+        img = cv.resize(img, resolucao_reduzida)
 
         if not ret:
             print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
@@ -76,13 +92,13 @@ def getImage(ip: str, choice: str):
         if k == 27:  # Pressione 'esc' para sair
             break
 
-        if cv.waitKey(1) & 0xFF == ord('r'):
-                print("Limpando Buffer...")
-                clear_buffer_one(cap)
-        
+        if k == ord('r'):
+            print(ping(ip[:11])) 
+            print("Limpando Buffer...")
+            cap.grab()
+              
         elif k == ord('s'):  # Pressione 's' para salvar as imagens
-            #img = cv.resize(img, resolucao_original)
-            #time.sleep(2)
+            img = cv.resize(img, resolucao_original)
             filename = f'img{num}_Camera{choice}.png'
             cv.imwrite(filename, img)
             print(f"Imagem salva: {filename}")
