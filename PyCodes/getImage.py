@@ -93,7 +93,7 @@ def getImage(ip: str, choice: str):
             break
 
         if k == ord('r'):
-            print(ping(ip[:11])) 
+            print(ping(ip[:11]))
             print("Limpando Buffer...")
             cap.grab()
               
