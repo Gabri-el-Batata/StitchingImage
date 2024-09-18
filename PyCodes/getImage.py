@@ -45,14 +45,17 @@ def draw_horizontal_line(img):
 
     return img_with_line
 
-def getImage(ip: str, choice: str):
-    address = 'rtsp://admin:cepetro1234@' + ip + '?tcp&fps=15'
+def getImage(ip: str, choice: str) -> None:
+    
+    FPS = 5
+    
+    address = f'rtsp://admin:cepetro1234@{ip}?tcp&fps={FPS}'
 
     # Estabelecendo conexao
     cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
 
     # Mudando o fps
-    cap.set(cv.CAP_PROP_FPS, 15)
+    cap.set(cv.CAP_PROP_FPS, FPS)
 
     # Mudando o tamanho do buffer
     cap.set(cv.CAP_PROP_BUFFERSIZE, 3)
@@ -62,22 +65,21 @@ def getImage(ip: str, choice: str):
         return
     
     num = int(input("Digite o número da foto:\n"))
-    print("Camera pronta para tirar fotos.")
 
-    resolucao_original = (1920, 1080)
-    resolucao_reduzida = (1280, 720)
     
     segundos = 3
-    for i in range(segundos, -1):
+    for i in range(segundos, -1, -1):
         print(f"Começando a filmagem em {i+1} segundos...")
         time.sleep(1)
-        print('oi')
+        
+    frames = 0
+    #ultima_contagem = time.perf_counter()
+    
+    print("\nCâmera pronta para tirar fotos.\n")
     
     while cap.isOpened():
         ret, img = cap.read()
         
-        #img = draw_horizontal_line(img)
-        img = cv.resize(img, resolucao_reduzida)
 
         if not ret:
             print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
@@ -86,6 +88,15 @@ def getImage(ip: str, choice: str):
             cap.grab()
             time.sleep(1)
             continue
+        
+        if frames % 10 == 0:    
+            cv.imshow('RTSP Frame', img)
+        
+        #contagem_atual = time.perf_counter()
+        
+        # if (contagem_atual - ultima_contagem) >= FPS:
+        #     print(img.tobytes())
+        #     ultima_contagem = contagem_atual
 
         k = cv.waitKey(10)
         
@@ -93,17 +104,18 @@ def getImage(ip: str, choice: str):
             break
 
         if k == ord('r'):
-            print(ping(ip[:11]))
+            #print(ping(ip[:11]))
             print("Limpando Buffer...")
             cap.grab()
               
         elif k == ord('s'):  # Pressione 's' para salvar as imagens
-            img = cv.resize(img, resolucao_original)
             filename = f'img{num}_Camera{choice}.png'
             cv.imwrite(filename, img)
             print(f"Imagem salva: {filename}")
             num += 1
-        cv.imshow('RTSP Frame', img)
+        
+        
+        frames += 1
                     
     # Apos fechar o video, todas as janelas são destruidas e a variavel reiniciada
     cap.release()
@@ -126,7 +138,7 @@ def getTwoImage(ip1: str, ip2:str, choice: str) -> None:
     cap2.set(cv.CAP_PROP_BUFFERSIZE, 3)
 
     num = int(input("Digite o número da foto:\n"))
-    print("Camera pronta para tirar fotos.")
+    print("Câmera pronta para tirar fotos.")
     
     while (cap1.isOpened() and cap2.isOpened()):
         ret1, img1 = cap1.read()
@@ -174,6 +186,13 @@ def getTwoImage(ip1: str, ip2:str, choice: str) -> None:
 
 # getTwoImage(CAMERA01, CAMERA02, "12")
 
+if check_wifi(WIFI_NAME) == True:
+    print("Voce esta conectado no Wi-Fi correto.\n")
+else:
+    print("Voce não esta conectado no Wi-Fi.")
+    print("Por favor, conecte-se ao Wi-Fi correto para iniciar as câmeras.\n")
+    exit()
+
 camera=""
 
 while True:
@@ -193,9 +212,4 @@ while True:
         print("Digito incorreto. Digite novamente.\n")
         print("Digite 'n' para sair do programa.\n")
 
-if check_wifi(WIFI_NAME) == True:
-    print("Voce esta conectado no Wi-Fi correto.")
-    getImage(camera, choice)
-else:
-    print("Voce não esta conectado no Wi-Fi.")
-    exit()
+getImage(camera, choice)
