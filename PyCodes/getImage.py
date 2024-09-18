@@ -76,6 +76,7 @@ def getImage(ip: str, choice: str) -> None:
     #ultima_contagem = time.perf_counter()
     
     print("\nCâmera pronta para tirar fotos.\n")
+    print('oi')
     
     while cap.isOpened():
         ret, img = cap.read()
