@@ -5,6 +5,7 @@ from CAMERA_IPS import (CAMERA01, CAMERA02)
 import time
 from utils import check_wifi
 from pythonping import ping
+import matplotlib.pyplot as plt
 
 WIFI_NAME = "CompVisio"
 
@@ -19,13 +20,13 @@ def ping_camera(ip):
         print(f"{ip} is not reachable.")
         return False
 
-def clear_buffer_two(cap1, cap2, frames_to_clear=10):
+def clear_buffer_two(cap1, cap2, frames_to_clear) -> None:
     # Limpa os frames do buffer chamando grab() múltiplas vezes
     for _ in range(frames_to_clear):
         cap1.grab()
         cap2.grab()
 
-def clear_buffer_one(cap, frames_to_clear=10):
+def clear_buffer_one(cap, frames_to_clear) -> None:
     # Limpa os frames do buffer chamando grab() múltiplas vezes
     for _ in range(frames_to_clear):
         cap.grab()
@@ -47,7 +48,7 @@ def draw_horizontal_line(img):
 
 def getImage(ip: str, choice: str) -> None:
     
-    FPS = 5
+    FPS = 1
     
     address = f'rtsp://admin:cepetro1234@{ip}?tcp&fps={FPS}'
 
@@ -73,12 +74,17 @@ def getImage(ip: str, choice: str) -> None:
         time.sleep(1)
         
     frames = 0
-    #ultima_contagem = time.perf_counter()
     
     print("\nCâmera pronta para tirar fotos.\n")
-    print('oi')
+    
+    tempos = []
+    
+    frames_ate_limpar = 30
+    contador_de_frames = 0
+    
     
     while cap.isOpened():
+        tempo_inicio = time.time()
         ret, img = cap.read()
         
 
@@ -90,14 +96,16 @@ def getImage(ip: str, choice: str) -> None:
             time.sleep(1)
             continue
         
-        if frames % 10 == 0:    
+        tempo_passado = time.time() - tempo_inicio
+        
+        tempos.append(tempo_passado)
+        
+        #if tempo_passado < (1/FPS):
+        #    print("Buffer pode estar cheio.")
+        #    cap.grab()
+        
+        if frames % 10 == 0: # Mostrar frame a cada 10 frames   
             cv.imshow('RTSP Frame', img)
-        
-        #contagem_atual = time.perf_counter()
-        
-        # if (contagem_atual - ultima_contagem) >= FPS:
-        #     print(img.tobytes())
-        #     ultima_contagem = contagem_atual
 
         k = cv.waitKey(10)
         
@@ -114,13 +122,28 @@ def getImage(ip: str, choice: str) -> None:
             cv.imwrite(filename, img)
             print(f"Imagem salva: {filename}")
             num += 1
+            
+        if contador_de_frames >= frames_ate_limpar:
+            print('Limpando Buffer') 
+            for _ in range(5):
+                cap.grab()
+            contador_de_frames = 0
         
         
         frames += 1
+        contador_de_frames += 1
                     
     # Apos fechar o video, todas as janelas são destruidas e a variavel reiniciada
     cap.release()
     cv.destroyAllWindows()
+    
+   
+    plt.plot(tempos, marker='o', color='b', linestyle='-', markersize=8, markerfacecolor='red', markeredgewidth=2, markeredgecolor='red')
+    plt.title("Gráfico dos tempos entre cada leitura de frame")
+    plt.xlabel("Frames")
+    plt.ylabel("Tempo")
+    plt.grid(True)
+    plt.show()
 
 def getTwoImage(ip1: str, ip2:str, choice: str) -> None:
     address1 = 'rtsp://admin:cepetro1234@' + ip1 + '?tcp&fps=1'
