@@ -82,6 +82,7 @@ def getImage(ip: str, choice: str) -> None:
     frames_ate_limpar = 30
     contador_de_frames = 0
     
+    intervalo_de_frames = 50
     
     while cap.isOpened():
         tempo_inicio = time.time()
@@ -100,9 +101,9 @@ def getImage(ip: str, choice: str) -> None:
         
         tempos.append(tempo_passado)
         
-        #if tempo_passado < (1/FPS):
-        #    print("Buffer pode estar cheio.")
-        #    cap.grab()
+        # if tempo_passado > 50:
+        #     print("Buffer pode estar cheio.")
+        #     cap.grab()
         
         if frames % 10 == 0: # Mostrar frame a cada 10 frames   
             cv.imshow('RTSP Frame', img)
