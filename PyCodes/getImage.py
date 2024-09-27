@@ -88,7 +88,6 @@ def getImage(ip: str, choice: str) -> None:
         tempo_inicio = time.time()
         ret, img = cap.read()
         
-
         if not ret:
             print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
             cap.release()
@@ -100,10 +99,6 @@ def getImage(ip: str, choice: str) -> None:
         tempo_passado = time.time() - tempo_inicio
         
         tempos.append(tempo_passado)
-        
-        # if tempo_passado > 50:
-        #     print("Buffer pode estar cheio.")
-        #     cap.grab()
         
         if frames % 10 == 0: # Mostrar frame a cada 10 frames   
             cv.imshow('RTSP Frame', img)
@@ -125,7 +120,6 @@ def getImage(ip: str, choice: str) -> None:
             num += 1
             
         if contador_de_frames >= frames_ate_limpar:
-            print('Limpando Buffer') 
             for _ in range(5):
                 cap.grab()
             contador_de_frames = 0
@@ -138,7 +132,8 @@ def getImage(ip: str, choice: str) -> None:
     cap.release()
     cv.destroyAllWindows()
     
-   
+    
+def plotar_grafico_tempos(tempos: list) -> None:
     plt.plot(tempos, marker='o', color='b', linestyle='-', markersize=8, markerfacecolor='red', markeredgewidth=2, markeredgecolor='red')
     plt.title("Gráfico dos tempos entre cada leitura de frame")
     plt.xlabel("Frames")

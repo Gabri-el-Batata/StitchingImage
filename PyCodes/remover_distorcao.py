@@ -2,12 +2,11 @@ import cv2 as cv
 import os
 from utils import get_data_pkl, remover_distorcao, plotar_duas_imagens
 
-
-caminho_para_foto = 'C:/Users/Adquiri/Downloads/img0_Camera1.png'
-
+caminho_para_foto = r'C:\Users\Adquiri\Documents\Camera_Batata\img0_Camera1_aruco.png'
 current_directory = os.getcwd().replace('\\', '/')
 
-choice_camera = str(input("Qual câmera você capturou a imagem?: [1/2]\n")).strip()
+index_choice_camera = caminho_para_foto.index('img')+ len('img') + 2 + len('Camera')
+choice_camera = caminho_para_foto[index_choice_camera]
 #number = str(input("Qual o número da foto?\n")).strip()
 
 cameraMatrix = f'/calibracao_camera1/cameraMatrix.pkl'

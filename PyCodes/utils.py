@@ -356,3 +356,10 @@ def desenha_marcadores(image, corners, ids):
     cv.imshow("Imagem com os marcadores ArUcos detectados", image)
     cv.waitKey(0)
     cv.destroyAllWindows()
+    
+    try:
+        choice = str(input("Gostaria de salvar a imagem com os marcadores detectados? [s/n]\n")).upper().strip()
+        if choice == "S":
+            cv.imwrite('img_arucos_detectados.png', image)
+    except Exception as e:
+        print("Ocorreu o erro: ", e)
