@@ -33,13 +33,12 @@ class Camera:
         #self.capture = cv.VideoCapture(self.address, cv.CAP_FFMPEG) 
         self.limite_frames = 30
         
-    def init_capture(self):
-        cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
-        cap.set(cv.CAP_PROP_BUFFERSIZE, self.buffer_size)
-        cap.set(cv.CAP_PROP_FPS, self.fps)
-        cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
-        cap.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000) 
-        return cap
+    # def init_capture(self):
+    #     cap = self.capture
+    #     cap.set(cv.CAP_PROP_BUFFERSIZE, self.buffer_size)
+    #     cap.set(cv.CAP_PROP_FPS, self.fps)
+    #     cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
+    #     cap.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000) 
     
     def ping_camera(self) -> None:
         response = os.system(f"ping -c 1 {self.ip}")
@@ -50,7 +49,7 @@ class Camera:
             print(f"{self.ip} is not reachable.")
             return False
         
-    def clear_buffer_one(self, capture, frames_to_clear=30) -> None:
+    def clear_buffer_one(self, capture, frames_to_clear=5) -> None:
         for _ in range(frames_to_clear):
             capture.grab()
     
@@ -68,20 +67,14 @@ class Camera:
     def get_buffer_size(self) -> int:
         return self.buffer_size
     
-    def camera_release(self) -> None:
-        self.capture.release()
-        cv.destroyAllWindows()
-    
     
     def getImage(self) -> None:
-        try:
-            cap = self.init_capture()
-            if not cap.isOpened():
-                raise ConnectionError("Erro ao conectar no fluxo RTSP")
-        except Exception as e:
-            print(e)
-            exit()
-            
+        cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
+        
+        cap.set(cv.CAP_PROP_BUFFERSIZE, self.buffer_size)
+        cap.set(cv.CAP_PROP_FPS, self.fps)
+        cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
+        cap.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000)
         
         if not cap.isOpened():
             print("Erro ao conectar ao fluxo RTSP. Verifique se as câmeras estão ligadas.")
@@ -102,12 +95,13 @@ class Camera:
         
             if not ret:
                 #print("Frame corrompido, continuando o processamento.")
-                print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
-                cap.release()
-                cap = self.init_capture()
-                cap.grab()
-                time.sleep(1)
-                continue
+                # print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
+                # cap.release()
+                # cap = self.init_capture()
+                # cap.grab()
+                # time.sleep(1)
+                print("A camera nao esta respondendo.")
+                break
             
             if frames % 10 == 0:
                 cv.imshow("Frame", img)
@@ -118,6 +112,7 @@ class Camera:
                 break
             
             elif k == ord('r'):
+                #print("Limpando Frame...\n")
                 cap.grab()
 
             elif k == ord('s'):
@@ -125,13 +120,15 @@ class Camera:
                 num += 1
             
             elif frames >= self.limite_frames:
+                #print("Limpando Frames automaticamente...\n")
                 for _ in range(5):
                     cap.grab()
                 frames = 0
             
             frames += 1
             
-        self.camera_release()
+        cap.release()
+        cv.destroyAllWindows()
         
 wifi = Wifi(WIFI_NAME)
 
