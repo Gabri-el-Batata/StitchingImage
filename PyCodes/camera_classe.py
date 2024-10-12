@@ -7,9 +7,19 @@ from CAMERA_IPS import CAMERA01, CAMERA02
 WIFI_NAME = "CompVisio"
 
 def save_image(num, img) -> None:
-        filename = f'img{num}_Camera.png'
-        cv.imwrite(filename, img)
-        print("Imagem Salva: ", filename)
+    filename = f'img{num}_Camera.png'
+    cv.imwrite(filename, img)
+    print("Imagem Salva: ", filename)
+
+def clear_buffer_one(capture, frames_to_clear=5) -> None:
+    for _ in range(frames_to_clear):
+        capture.grab()
+
+def init_capture(capture, buffer_size:int, fps:int) -> None:
+    capture.set(cv.CAP_PROP_BUFFERSIZE, buffer_size)
+    capture.set(cv.CAP_PROP_FPS, fps)
+    capture.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
+    capture.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000) 
 
 class Wifi:
     def __init__(self, wifi_name: str) -> None:
@@ -33,12 +43,6 @@ class Camera:
         #self.capture = cv.VideoCapture(self.address, cv.CAP_FFMPEG) 
         self.limite_frames = 30
         
-    # def init_capture(self):
-    #     cap = self.capture
-    #     cap.set(cv.CAP_PROP_BUFFERSIZE, self.buffer_size)
-    #     cap.set(cv.CAP_PROP_FPS, self.fps)
-    #     cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
-    #     cap.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000) 
     
     def ping_camera(self) -> None:
         response = os.system(f"ping -c 1 {self.ip}")
@@ -48,10 +52,6 @@ class Camera:
         else:
             print(f"{self.ip} is not reachable.")
             return False
-        
-    def clear_buffer_one(self, capture, frames_to_clear=5) -> None:
-        for _ in range(frames_to_clear):
-            capture.grab()
     
     def set_fps(self, new_fps:int) -> None:
         self.fps = new_fps
@@ -68,13 +68,10 @@ class Camera:
         return self.buffer_size
     
     
-    def getImage(self) -> None:
+    def getFrame(self) -> None:
         cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
         
-        cap.set(cv.CAP_PROP_BUFFERSIZE, self.buffer_size)
-        cap.set(cv.CAP_PROP_FPS, self.fps)
-        cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 50000)  # Timeout para abertura do stream
-        cap.set(cv.CAP_PROP_READ_TIMEOUT_MSEC, 50000)
+        init_capture(cap, 3, 1)
         
         if not cap.isOpened():
             print("Erro ao conectar ao fluxo RTSP. Verifique se as câmeras estão ligadas.")
@@ -111,18 +108,13 @@ class Camera:
             if k == 27:
                 break
             
-            elif k == ord('r'):
-                #print("Limpando Frame...\n")
-                cap.grab()
-
             elif k == ord('s'):
                 save_image(num, img)
                 num += 1
             
             elif frames >= self.limite_frames:
                 #print("Limpando Frames automaticamente...\n")
-                for _ in range(5):
-                    cap.grab()
+                clear_buffer_one(cap)
                 frames = 0
             
             frames += 1
