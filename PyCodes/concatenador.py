@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 from utils import get_current_directory, confirma_leitura_imagens, detectar_cantos_arucos, desenha_marcadores
+import typing
+from cv2.typing import MatLike
 
 current_directory = get_current_directory()
 
@@ -15,7 +17,7 @@ image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
 
 corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
 
-def get_center(corners1, corners2):
+def get_center(corners1, corners2) -> tuple[typing.Any, typing.Any]:
     center1 = np.mean(corners1[0][0], axis=0)
     center2 = np.mean(corners2[0][0], axis=0)
     
@@ -25,7 +27,7 @@ def calcula_translacao(center1, center2) -> int:
     translation_x = int(center1[0] - center2[0])
     return translation_x
 
-def concatena_imagens(image1, image2, center1, center2):
+def concatena_imagens(image1: MatLike, image2: MatLike, center1: typing.Any, center2: typing.Any) -> MatLike:
     
     image2 = image2[:, int(center2[0]):]
 
@@ -48,7 +50,7 @@ def concatena_imagens(image1, image2, center1, center2):
     
     return panorama
 
-def main_concatenador(image1, image2):
+def main_concatenador(image1: MatLike, image2: MatLike) -> MatLike:
     
     corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
 

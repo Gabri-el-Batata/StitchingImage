@@ -281,7 +281,7 @@ def stitch_images(image_path1, image_path2):
 #   cv.imshow('Imagem com ArUco detectado',image)
 #   cv.waitKey(0)
   
-def confirma_leitura_imagens(img1_path, img2_path):  
+def confirma_leitura_imagens(img1_path: str, img2_path:str) -> tuple[cv.typing.MatLike, cv.typing.MatLike]:  
     # Carregar as imagens
     image1 = cv.imread(img1_path)
     if image1 is None:
@@ -302,7 +302,7 @@ def carregar_dados_detector_aruco():
     return detector
 
 
-def detectar_cantos_arucos(image1, image2):
+def detectar_cantos_arucos(image1: cv.typing.MatLike, image2: cv.typing.MatLike):
     '''
     Codigo com a finalidade de detectar os códigos ArUcos. Atente-se ao parâmetro de aruco_dict.
     '''

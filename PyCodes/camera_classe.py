@@ -35,13 +35,12 @@ class Wifi:
         print("Voce esta conectado no Wi-Fi correto.")
 
 class Camera:
-    def __init__(self, fps: int, ip:str, buffer_size:int) -> None:
+    def __init__(self, fps: int, ip:str, buffer_size:int, limite_frames:int=30) -> None:
         self.fps = fps
         self.ip = ip
         self.buffer_size = buffer_size
         self.address = f'rtsp://admin:cepetro1234@{self.ip}?tcp&fps={self.fps}'
-        #self.capture = cv.VideoCapture(self.address, cv.CAP_FFMPEG) 
-        self.limite_frames = 30
+        self.limite_frames = limite_frames
         
     
     def ping_camera(self) -> None:
@@ -65,8 +64,7 @@ class Camera:
     
     @property
     def get_buffer_size(self) -> int:
-        return self.buffer_size
-    
+        return self.buffer_size  
     
     def getFrame(self) -> None:
         cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
@@ -79,7 +77,7 @@ class Camera:
         
         num = int(input("Digite o número da foto:\n"))    
         
-        for i in range(3, -1, -1):
+        for i in range(2, -1, -1):
             print(f"Começando a filmagem em {i+1} segundos...")
             time.sleep(1)
         
@@ -113,7 +111,6 @@ class Camera:
                 num += 1
             
             elif frames >= self.limite_frames:
-                #print("Limpando Frames automaticamente...\n")
                 clear_buffer_one(cap)
                 frames = 0
             
@@ -122,10 +119,10 @@ class Camera:
         cap.release()
         cv.destroyAllWindows()
         
-wifi = Wifi(WIFI_NAME)
+# wifi = Wifi(WIFI_NAME)
 
-wifi.verify_wifi()
+# wifi.verify_wifi()
 
-Camera1 = Camera(1, CAMERA01, 3)
+# Camera1 = Camera(1, CAMERA01, 3)
 
-Camera1.getImage()
+# Camera1.getFrame()

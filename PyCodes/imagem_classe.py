@@ -1,8 +1,4 @@
 import cv2 as cv
-from utils import check_wifi
-import os
-import time
-from CAMERA_IPS import CAMERA01, CAMERA02
 
 class Imagem:
     def __init__(self, endereco:str) -> None:
