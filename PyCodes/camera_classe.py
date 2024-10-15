@@ -6,8 +6,8 @@ from CAMERA_IPS import CAMERA01, CAMERA02
 
 WIFI_NAME = "CompVisio"
 
-def save_image(num, img) -> None:
-    filename = f'img{num}_Camera.png'
+def save_image(num:int, img:cv.typing.MatLike, tag:int) -> None:
+    filename = f'img{num}_Camera{str(tag)}.png'
     cv.imwrite(filename, img)
     print("Imagem Salva: ", filename)
 
@@ -35,13 +35,13 @@ class Wifi:
         print("Voce esta conectado no Wi-Fi correto.")
 
 class Camera:
-    def __init__(self, fps: int, ip:str, buffer_size:int, limite_frames:int=30) -> None:
+    def __init__(self, fps: int, ip:str, buffer_size:int, tag:int, limite_frames:int=30) -> None:
         self.fps = fps
         self.ip = ip
         self.buffer_size = buffer_size
         self.address = f'rtsp://admin:cepetro1234@{self.ip}?tcp&fps={self.fps}'
         self.limite_frames = limite_frames
-        
+        self.tag = tag
     
     def ping_camera(self) -> None:
         response = os.system(f"ping -c 1 {self.ip}")
@@ -65,6 +65,13 @@ class Camera:
     @property
     def get_buffer_size(self) -> int:
         return self.buffer_size  
+    
+    @property
+    def get_tag(self) -> int:
+        return self.tag
+    
+    def set_tag(self, new_tag:int) -> None:
+        self.tag = new_tag
     
     def getFrame(self) -> None:
         cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
@@ -107,7 +114,7 @@ class Camera:
                 break
             
             elif k == ord('s'):
-                save_image(num, img)
+                save_image(num, img, self.tag)
                 num += 1
             
             elif frames >= self.limite_frames:
@@ -119,10 +126,3 @@ class Camera:
         cap.release()
         cv.destroyAllWindows()
         
-# wifi = Wifi(WIFI_NAME)
-
-# wifi.verify_wifi()
-
-# Camera1 = Camera(1, CAMERA01, 3)
-
-# Camera1.getFrame()

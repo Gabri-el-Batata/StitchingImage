@@ -1,7 +1,12 @@
 import cv2 as cv
+from utils import get_data_pkl
+
+CameraMatrix_PATH = r"StitchingImage\calibracao_camera1\cameraMatrix.pkl".replace('\\', '/')
+dist_PATH = r"StitchingImage\calibracao_camera1\dist.pkl".replace('\\', '/')
 
 class Imagem:
     def __init__(self, endereco:str) -> None:
+        endereco = f"{endereco}".replace('\\', '/')
         try:
             self.endereco = endereco
             cv.imread(self.endereco)
@@ -23,8 +28,11 @@ class Imagem:
     def getImage(self) -> cv.typing.MatLike:
         return cv.imread(self.endereco)
     
-    def remove_distorcao(self, cameraMatrix, dist) -> cv.typing.MatLike:
+    def remove_distorcao(self, cameraMatrix=CameraMatrix_PATH, dist=dist_PATH) -> cv.typing.MatLike:
         h, w = self.tamanho[:2]
+        
+        cameraMatrix = get_data_pkl(cameraMatrix)
+        dist = get_data_pkl(dist)
         
         newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(cameraMatrix, dist, (w, h), 1, (w, h))
         
@@ -33,12 +41,12 @@ class Imagem:
         x, y, w, h = roi
         
         if roi[2] > 0 and roi[3] > 0:
-            dst = dst[y:y+h, x:x+w]
+            imagem_sem_distorcao = imagem_sem_distorcao[y:y+h, x:x+w]
         else: print("ROI invalida, sera usada a imagem completa.")
         
         return imagem_sem_distorcao
     
-    def suavizar_imagem(self, alpha) -> cv.typing.MatLike:
+    def suavizar_imagem(self, alpha:int) -> cv.typing.MatLike:
         return cv.GaussianBlur(self.getImage(), (5, 5), alpha)
     
     def equalizar_imagem(self) -> cv.typing.MatLike:

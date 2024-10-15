@@ -4,18 +4,18 @@ from utils import get_current_directory, confirma_leitura_imagens, detectar_cant
 import typing
 from cv2.typing import MatLike
 
-current_directory = get_current_directory()
+# current_directory = get_current_directory()
 
-print("Esse é o diretório atual: ", current_directory)
+# print("Esse é o diretório atual: ", current_directory)
 
-# number = str(input("Qual número da imagem que você vai concatenar: \n")).strip()
+# # number = str(input("Qual número da imagem que você vai concatenar: \n")).strip()
 
-img1_path = r"C:\Users\Adquiri\Documents\Camera_Batata\StitchingImage\caliResult_Camera2.png".replace('\\', '/')
-img2_path = r"C:\Users\Adquiri\Documents\Camera_Batata\StitchingImage\caliResult_Camera1.png".replace('\\', '/')
+# img1_path = r"C:\Users\Adquiri\Documents\Camera_Batata\StitchingImage\caliResult_Camera2.png".replace('\\', '/')
+# img2_path = r"C:\Users\Adquiri\Documents\Camera_Batata\StitchingImage\caliResult_Camera1.png".replace('\\', '/')
 
-image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
+# image1, image2 = confirma_leitura_imagens(img1_path, img2_path)
 
-corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
+# corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
 
 def get_center(corners1, corners2) -> tuple[typing.Any, typing.Any]:
     center1 = np.mean(corners1[0][0], axis=0)
@@ -52,22 +52,26 @@ def concatena_imagens(image1: MatLike, image2: MatLike, center1: typing.Any, cen
 
 def main_concatenador(image1: MatLike, image2: MatLike) -> MatLike:
     
-    corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
+    try:
+        corners1, ids1, corners2, ids2 = detectar_cantos_arucos(image1, image2)
+    except Exception as e:
+        print("O algoritmo não detectou nenhum código ArUco na montagem.\n")
+        exit()
 
     center1, center2 = get_center(corners1, corners2)
 
     return concatena_imagens(image1, image2, center1, center2)
     
-panorama = main_concatenador(image1, image2)
+# panorama = main_concatenador(image1, image2)
 
-# Salvar ou exibir o resultado
-cv.imshow('Panorama', panorama)
-cv.waitKey(0)
-cv.destroyAllWindows()
-choice = str(input("Você deseja salvar a imagem final? [S/n]\n")).upper().strip()
+# # Salvar ou exibir o resultado
+# cv.imshow('Panorama', panorama)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
+# choice = str(input("Você deseja salvar a imagem final? [S/n]\n")).upper().strip()
 
-if not (choice == "S" or choice == ""):
-    exit()
+# if not (choice == "S" or choice == ""):
+#     exit()
 
-cv.imwrite(f'panoramas/panorama_aruco_normal.png', panorama)
-print("Salvando Panorama.")
+# cv.imwrite(f'panoramas/panorama_aruco_normal.png', panorama)
+# print("Salvando Panorama.")
