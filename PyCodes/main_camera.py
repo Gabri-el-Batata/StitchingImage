@@ -39,8 +39,10 @@ wifi = Wifi(WIFI_NAME)
 wifi.verify_wifi()
 
 Camera1 = Camera(1, CAMERA01, 3, 1)
+Camera2 = Camera(1, CAMERA02, 3, 2)
 
-#Camera1.getFrame()
+Camera1.getFrame()
+Camera2.getFrame()
 
 lista_imagens = mostra_arquivos(diretorio_atual)
 
@@ -51,9 +53,17 @@ for imagem in lista_imagens_objetos:
     cv.imwrite(f'caliResult_Camera{imagem.get_endereco[-5]}.png', imagem.remove_distorcao())
 
 # Concatenar imagens da camera1 e camera2 (somente se tiver essas duas imagens respectivamente)
-if localizar_cam1_cam2(lista_imagens):
-    panorama = main_concatenador(lista_imagens_objetos[0], lista_imagens_objetos[1])
 
+try:
+    imagem1_sem_dist = Imagem('caliResult_Camera1.png')
+    imagem2_sem_dist = Imagem('caliResult_Camera2.png')
+except Exception as e:
+    print("Não foi possível carregar as imagens. Verifique se as imagens estão no diretório.")
+    exit()
+
+if localizar_cam1_cam2(lista_imagens):
+    panorama = main_concatenador(imagem1_sem_dist.getImage(), imagem2_sem_dist.getImage()) 
+    
     cv.imshow("Panorama", panorama)
     cv.waitKey(0)
 

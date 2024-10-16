@@ -4,7 +4,6 @@ import os
 
 current_directory = os.getcwd().replace('\\', '/')
 
-
 cameraMatrix = '/cameraMatrix.pkl'
 dist = '/dist.pkl'
 

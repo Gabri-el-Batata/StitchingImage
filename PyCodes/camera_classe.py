@@ -6,6 +6,17 @@ from CAMERA_IPS import CAMERA01, CAMERA02
 
 WIFI_NAME = "CompVisio"
 
+def draw_horizontal_line(img: cv.typing.MatLike) -> cv.typing.MatLike:  
+        h, w = img.shape[:2]
+        center_y = h // 2
+        color = (0, 255, 0)  # Verde
+        thickness = 2
+
+        img_with_line = img.copy()
+        cv.line(img_with_line, (0, center_y), (w, center_y), color, thickness)
+
+        return img_with_line
+
 def save_image(num:int, img:cv.typing.MatLike, tag:int) -> None:
     filename = f'img{num}_Camera{str(tag)}.png'
     cv.imwrite(filename, img)
@@ -81,8 +92,10 @@ class Camera:
         if not cap.isOpened():
             print("Erro ao conectar ao fluxo RTSP. Verifique se as câmeras estão ligadas.")
             exit()
-        
+                
         num = int(input("Digite o número da foto:\n"))    
+        
+        print("Iniciando a filmagem da câmera com a tag: ", self.get_tag)
         
         for i in range(2, -1, -1):
             print(f"Começando a filmagem em {i+1} segundos...")
@@ -94,6 +107,8 @@ class Camera:
         
         while cap.isOpened():
             ret, img = cap.read()
+            
+            img = draw_horizontal_line(img)
         
             if not ret:
                 #print("Frame corrompido, continuando o processamento.")

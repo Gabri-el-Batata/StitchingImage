@@ -59,3 +59,16 @@ class Imagem:
         img_equalizada_colorida = cv.merge([equalizado_b, equalizado_g, equalizado_r])
 
         return img_equalizada_colorida
+    
+    def draw_horizontal_line(self) -> cv.typing.MatLike:
+        img = self.getImage()
+        
+        h, w = img.shape[:2]
+        center_y = h // 2
+        color = (0, 255, 0)  # Verde
+        thickness = 2
+
+        img_with_line = img.copy()
+        cv.line(img_with_line, (0, center_y), (w, center_y), color, thickness)
+
+        return img_with_line
