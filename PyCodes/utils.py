@@ -39,7 +39,7 @@ def confirma_imagem(path:str) -> None:
     else:
         pass
 
-def getImage(ip: str, choice: str):
+def getImage(ip: str, choice: str) -> None:
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "timeout;5000" # 5 seconds
     address = 'rtsp://admin:cepetro1234@' + ip
     cap = cv.VideoCapture(address,cv.CAP_FFMPEG)
@@ -83,14 +83,14 @@ def getImage(ip: str, choice: str):
     cap.release()
     cv.destroyAllWindows()
 
-def confirma_escolha(valor:str):
+def confirma_escolha(valor:str) -> None:
     if valor in ["S", ""]:
         pass
     else:
         print("Digito Incorreto.")
         exit()
 
-def get_data_pkl(path):
+def get_data_pkl(path: str):
     try:
         with open(path, 'rb') as f1:
             data1 = pickle.load(f1)
@@ -107,7 +107,7 @@ def get_data_pkl(path):
 def get_current_directory() -> str:
     return os.getcwd().replace('\\', '/')
 
-def plotar_duas_imagens(img1, img2) -> None:
+def plotar_duas_imagens(img1: cv.typing.MatLike, img2: cv.typing.MatLike) -> None:
     plt.figure(figsize=(20, 10))
 
     plt.subplot(1, 2, 1)
@@ -122,7 +122,7 @@ def plotar_duas_imagens(img1, img2) -> None:
 
     plt.show()
 
-def equalizar_imagem_colorida(img):
+def equalizar_imagem_colorida(img: cv.typing.MatLike) -> cv.typing.MatLike:
     '''
     Metodo utilizado. Separar os canais de cores da imagem base, equalizar cada um e depois mesclar esses canais na imagem base.
     '''
@@ -136,20 +136,7 @@ def equalizar_imagem_colorida(img):
 
     return img_equalizada_colorida
 
-def equalizar_imagem(img):
-    '''
-    Essa funcao vai equalizar a imagem convertendo de BGR para YCrCb (canal de luz e cromancia)
-    e equalizar o canal de luz
-    '''
-    imagem_ycrcb = cv.cvtColor(img, cv.COLOR_BGR2YCrCb)
-
-    imagem_ycrcb[:, :, 0] = cv.equalizeHist(imagem_ycrcb[:, :, 0])
-
-    imagem_equalizada_colorida = cv.cvtColor(imagem_ycrcb, cv.COLOR_YCrCb2BGR)
-
-    return imagem_equalizada_colorida
-
-def equalizar_imagens_normal(img):
+def equalizar_imagens_normal(img: cv.typing.MatLike) -> cv.typing.MatLike:
     '''
     Metodo tradicional de equalizar a image, mas a deixa cinza.
     '''
@@ -170,7 +157,7 @@ def check_wifi(WIFI_NAME:str):
     else:
         return False
     
-def remover_distorcao(img, cameraMatrix, dist):
+def remover_distorcao(img: cv.typing.MatLike, cameraMatrix, dist):
     h, w = img.shape[:2]
     newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(cameraMatrix, dist, (w,h), 1, (w,h))
 
@@ -206,7 +193,7 @@ def ReadCamera(ip:str) -> None:
     cap.release()
     cv.destroyAllWindows()
 
-def stitch_images(image_path1, image_path2):
+def stitch_images(image_path1: str, image_path2:str) -> None:
     # Carregar as imagens
     img1 = cv.imread(image_path1)
     img2 = cv.imread(image_path2)
@@ -234,53 +221,6 @@ def stitch_images(image_path1, image_path2):
 
     cv.destroyAllWindows()
 
-
-# def detect_markers(image, desired_aruco_dictionary: str) -> None:
-  
-#   this_aruco_dict = cv.aruco.Dictionary_get(ARUCO_DICT[desired_aruco_dictionary])
-#   this_aruco_parameters = cv.aruco.DetectorParameters_create()
-
-#   (corners, ids, _) = cv.aruco.detectMarkers(image, this_aruco_dict, parameters=this_aruco_parameters)
-
-#   if len(corners) > 0:
-#     # Flatten the ArUco IDs list
-#     ids = ids.flatten()
-
-#     # Loop over the detected ArUco corners
-#     for (marker_corner, marker_id) in zip(corners, ids):
-    
-#       # Extract the marker corners
-#       corners = marker_corner.reshape((4, 2))
-#       (top_left, top_right, bottom_right, bottom_left) = corners
-
-#       # Convert the (x,y) coordinate pairs to integers
-#       top_right = (int(top_right[0]), int(top_right[1]))
-#       bottom_right = (int(bottom_right[0]), int(bottom_right[1]))
-#       bottom_left = (int(bottom_left[0]), int(bottom_left[1]))
-#       top_left = (int(top_left[0]), int(top_left[1]))
-
-#       # Draw the bounding box of the ArUco detection
-#       cv.line(image, top_left, top_right, (0, 255, 0), 2)
-#       cv.line(image, top_right, bottom_right, (0, 255, 0), 2)
-#       cv.line(image, bottom_right, bottom_left, (0, 255, 0), 2)
-#       cv.line(image, bottom_left, top_left, (0, 255, 0), 2)
-
-#       # Calculate and draw the center of the ArUco marker
-#       center_x = int((top_left[0] + bottom_right[0]) / 2.0)
-#       center_y = int((top_left[1] + bottom_right[1]) / 2.0)
-#       cv.circle(image, (center_x, center_y), 4, (0, 0, 255), -1)
-
-#       # Draw the ArUco marker ID on the video image1
-#       # The ID is always located at the top_left of the ArUco marker
-#       cv.putText(image, str(marker_id), 
-#         (top_left[0], top_left[1] - 15),
-#         cv.FONT_HERSHEY_SIMPLEX,
-#         0.5, (0, 255, 0), 2)
-
-#       # Display the resulting image1
-#   cv.imshow('Imagem com ArUco detectado',image)
-#   cv.waitKey(0)
-  
 def confirma_leitura_imagens(img1_path: str, img2_path:str) -> tuple[cv.typing.MatLike, cv.typing.MatLike]:  
     # Carregar as imagens
     image1 = cv.imread(img1_path)
@@ -321,7 +261,7 @@ def detectar_cantos_arucos(image1: cv.typing.MatLike, image2: cv.typing.MatLike)
         print("Não foram detectados marcadores ArUco em ambas as imagens.")
         exit()
 
-def desenha_marcadores(image, corners, ids):
+def desenha_marcadores(image: cv.typing.MatLike, corners, ids) -> None:
     ids = ids.flatten()
     
     image=image.copy()
