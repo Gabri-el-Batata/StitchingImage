@@ -53,6 +53,7 @@ class Camera:
         self.address = f'rtsp://admin:cepetro1234@{self.ip}?tcp&fps={self.fps}'
         self.limite_frames = limite_frames
         self.tag = tag
+        self.frame = (1280, 720)
     
     def ping_camera(self) -> None:
         response = os.system(f"ping -c 1 {self.ip}")
@@ -108,7 +109,7 @@ class Camera:
         while cap.isOpened():
             ret, img = cap.read()
             
-            img = draw_horizontal_line(img)
+            #img = draw_horizontal_line(img)
         
             if not ret:
                 #print("Frame corrompido, continuando o processamento.")
@@ -141,3 +142,28 @@ class Camera:
         cap.release()
         cv.destroyAllWindows()
         
+    def record_video(self, display_window:bool=True) -> None:
+        output_file = f"video_output{self.tag}.avi"
+        cap = cv.VideoCapture(self.address)
+        out = cv.VideoWriter(output_file, 'XVID', self.fps, self.frame)
+        
+        while True:
+            ret, frame = cap.read()
+            
+            if ret:
+                out.write(frame)
+                
+                if display_window:
+                    cv.imshow("Frame", frame)
+                
+                k = cv.waitKey(10)
+                
+                if k==27:
+                    break
+            else:
+                break
+            
+        cap.release()
+        out.release()
+        cv.destroyAllWindows()
+                
