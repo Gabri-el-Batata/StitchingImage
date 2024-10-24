@@ -5,7 +5,7 @@ CameraMatrix_PATH = r"StitchingImage\calibracao_camera1\cameraMatrix.pkl".replac
 dist_PATH = r"StitchingImage\calibracao_camera1\dist.pkl".replace('\\', '/')
 
 class Imagem:
-    def __init__(self, endereco:str) -> None:
+    def __init__(self, endereco:str, tag:int) -> None:
         endereco = f"{endereco}".replace('\\', '/')
         try:
             self.endereco = endereco
@@ -13,6 +13,7 @@ class Imagem:
         except Exception as e:
             print("Endereço vazio.")
         self.tamanho = cv.imread(self.endereco).shape
+        self.tag = tag
     
     def set_endereco(self, novo_endereco:str) -> None:
         self.endereco = novo_endereco
@@ -24,6 +25,13 @@ class Imagem:
     @property
     def get_endereco(self) -> str:
         return self.endereco
+    
+    @property
+    def get_tag(self) -> int:
+        return self.tag
+
+    def set_tag(self, new_tag:int) -> None:
+        self.tag = new_tag
     
     def getImage(self) -> cv.typing.MatLike:
         return cv.imread(self.endereco)

@@ -84,6 +84,13 @@ class Camera:
     
     def set_tag(self, new_tag:int) -> None:
         self.tag = new_tag
+        
+    @property
+    def get_size(self) -> tuple[int]:
+        return self.frame
+    
+    def set_size(self, new_size: tuple[int]) -> None:
+        self.frame = new_size
     
     def getFrame(self) -> None:
         cap = cv.VideoCapture(self.address, cv.CAP_FFMPEG)
@@ -118,7 +125,7 @@ class Camera:
                 # cap = self.init_capture()
                 # cap.grab()
                 # time.sleep(1)
-                print("A camera nao esta respondendo.")
+                print("A câmera não esta respondendo.")
                 break
             
             if frames % 10 == 0:
