@@ -47,8 +47,8 @@ wifi.verify_wifi()
 Camera1 = Camera(1, CAMERA01, 3, 1)
 Camera2 = Camera(1, CAMERA02, 3, 2)
 
-#Camera1.getFrame()
-#Camera2.getFrame()
+Camera1.getFrame()
+Camera2.getFrame()
 
 lista_imagens = mostra_arquivos(diretorio_atual)
 
@@ -56,8 +56,14 @@ lista_imagens_objetos = [Imagem(endereco_imagem, endereco_imagem[3]) for enderec
 
 # Remover distorção de cada imagem e salvar essas imagens sem distorcao
 
-# Erro gravissimo de remover distorção de todas as imagens que estao no diretorio !!!!
-# Consertar essa linha de codigo urgentemente
+escolha_calibrar = str(input("Deseja remover a distorção das imagens? [S/N]\n")).strip().upper()
+
+while escolha_calibrar not in ["S", "N"]:
+    print("Entrada inválida. Por favor, digite 'S' para sim ou 'N' para não.\n")
+    escolha_calibrar = str(input("Deseja remover a distorção das imagens? [S/N]\n")).strip().upper()
+
+if escolha_calibrar == "N":
+    exit()
 
 print("-"*7, " INICIANDO CALIBRAÇÃO ", 7*"-", "\n")
 print("Iniciando a remoção da distorção das imagens em:\n")
@@ -86,6 +92,17 @@ try:
     imagem2_sem_dist = Imagem(f'{pasta_imagens_sem_distorcao_nome}/caliResult0_Camera2.png')
 except Exception as e:
     print("Não foi possível carregar as imagens. Verifique se as imagens estão no diretório.")
+    exit()
+
+print("Essas são as imagens sem distorção:\n")
+print(f"{imagem1_sem_dist.get_endereco}\n{imagem2_sem_dist.get_endereco}\n")
+escolha_calibrar = str(input("Deseja concatenar essas imagens? [S/N]\n")).strip().upper()
+
+while escolha_calibrar not in ["S", "N"]:
+    print("Entrada inválida. Por favor, digite 'S' para sim ou 'N' para não.\n")
+    escolha_calibrar = str(input("Deseja concatenar essas imagens? [S/N]\n")).strip().upper()
+
+if escolha_calibrar == "N":
     exit()
 
 if localizar_cam1_cam2(lista_imagens):

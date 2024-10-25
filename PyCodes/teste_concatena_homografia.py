@@ -3,8 +3,8 @@ from concatenador import main_concatenador
 from utils import equalizar_imagem_colorida
 import numpy as np
 
-img1 = cv.imread(r"fotos2410\caliResult_Camera1.png".replace('\\', '/'))
-img2 = cv.imread(r"fotos2410\caliResult_Camera2.png".replace('\\', '/'))
+img1 = cv.imread(r"StitchingImage\fotos2410\caliResult_Camera1.png".replace('\\', '/'))
+img2 = cv.imread(r"StitchingImage\fotos2410\caliResult_Camera2.png".replace('\\', '/'))
 
 
 # Converter para escala de cinza
@@ -38,6 +38,9 @@ H, _ = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
 # Aplicar a transformação usando warpPerspective
 height, width, channels = img2.shape
 result = cv.warpPerspective(img1, H, (width, height))
+
+cv.imshow('', result)
+cv.waitKey(0)
 
 cv.imshow('', main_concatenador(img2, result))
 cv.imwrite('panorama_homografico.png', main_concatenador(img2, result))

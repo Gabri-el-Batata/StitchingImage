@@ -119,7 +119,7 @@ class Camera:
             #img = draw_horizontal_line(img)
         
             if not ret:
-                #print("Frame corrompido, continuando o processamento.")
+                # print("Frame corrompido, continuando o processamento.")
                 # print("Erro ao conectar ao fluxo RTSP. Tentando reconectar...")
                 # cap.release()
                 # cap = self.init_capture()
